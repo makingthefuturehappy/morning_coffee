@@ -1,12 +1,9 @@
 ##############################
 import parser
-from datetime import date
 
-def cnbc():
+def cnbc(today):
   print("CNBC")
   url = "https://www.cnbc.com/"
-  today = str(date.today().strftime("%Y/%m/%d"))
-
   cnbc = parser.Content(url, "CNBC", today)
 
   # useful links selection
@@ -33,10 +30,9 @@ def cnbc():
   return cnbc
 
 ############################
-def economist():
+def economist(today):
   print("The Economist")
   url = "https://www.economist.com/"
-  today = str(date.today().strftime("%Y/%m/%d"))
   economist = parser.Content(url, "The Economist", today)
 
   # useful links selection
