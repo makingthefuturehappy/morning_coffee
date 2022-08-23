@@ -1,4 +1,4 @@
-import content_scan.latam as latam
+import latam as latam
 from datetime import date
 
 def main():
