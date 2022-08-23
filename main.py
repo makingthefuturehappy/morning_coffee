@@ -5,55 +5,56 @@ import tg
 import yaml
 
 def main(models):
-#     today = str(date.today().strftime("%Y/%m/%d"))
-#
-#     # content parser
-#     news_sources = [] # to keep news from all web sources
-#     cnbc = latam.cnbc(today)
-#     # economist = latam.economist(today)
-#     news_sources.append(cnbc,
-#                         # economist
-#                         )
-#     print("news load is done\n")
-#
-#     # summarize
-#     for source in news_sources:
-#         print("source:", source.source_name)
-#
-#         for news in source.news:
-#             print(news['title'])
-#
-#             for model in models:
-#
-#                 try:
-#                     summary = model.summarize(news['text'])
-#                     text_processor.clean_print_update(summary)
-#
-#                     # update model statistics
-#                     news.update({model.model_name: "success"})
-#
-#                 except:
-#                     print("some error happened\n")
-#                     news.update({model.model_name: "fail"})
-#                     continue
-#
-#     # print statistics
-#     print("summarization result")
-#     for source in news_sources:
-#         print("source:", source.source_name)
-#         print("links_all   :", len(source.links_all))
-#         print("useful      :", len(source.links_useful))
-#         for model in models:
-#             print("\n", model.model_name)
-#             fails = 0
-#             success = 0
-#             for news in source.news:
-#                 if news[model.model_name] == "fail":
-#                     fails += 1
-#                 elif news[model.model_name] == "success":
-#                     success += 1
-#             print("success total:", success)
-#             print("failed total:", fails)
+    today = str(date.today().strftime("%Y/%m/%d"))
+
+    # content parser
+    news_sources = [] # to keep news from all web sources
+    cnbc = latam.cnbc(today)
+    economist = latam.economist(today)
+    news_sources.append(
+        # cnbc,
+                        economist
+                        )
+    print("news load is done\n")
+
+    # summarize
+    for source in news_sources:
+        print("source:", source.source_name)
+
+        for news in source.news:
+            print(news['title'])
+
+            for model in models:
+
+                try:
+                    summary = model.summarize(news['text'])
+                    text_processor.clean_print_update(summary)
+
+                    # update model statistics
+                    news.update({model.model_name: "success"})
+
+                except:
+                    print("some error happened\n")
+                    news.update({model.model_name: "fail"})
+                    continue
+
+    # print statistics
+    print("summarization result")
+    for source in news_sources:
+        print("source:", source.source_name)
+        print("links_all   :", len(source.links_all))
+        print("useful      :", len(source.links_useful))
+        for model in models:
+            print("\n", model.model_name)
+            fails = 0
+            success = 0
+            for news in source.news:
+                if news[model.model_name] == "fail":
+                    fails += 1
+                elif news[model.model_name] == "success":
+                    success += 1
+            print("success total:", success)
+            print("failed total:", fails)
 
     # TG post
 
