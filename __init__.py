@@ -10,6 +10,5 @@ def main():
     news_sources.append(cnbc,
                         # economist
                         )
-
     print("all done")
-    return (news_sources)
+    return news_sources
