@@ -16,6 +16,10 @@ def clean_text(text):
   repl = r'\1\3'
   text = re.sub(pattern, repl, text)
 
+  pattern = r'([a-z][.])([A-Z])'
+  repl = r'\1 \2'
+  text = re.sub(pattern, repl, text)
+
   pattern = '(\d[.])(\s)(\d)'
   repl = r'\1\3'
   text = re.sub(pattern, repl, text)
