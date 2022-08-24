@@ -2,10 +2,10 @@ import re
 
 def clean_text(text):
 
-  text = text.replace(" - ", "-")
-  text = text.replace("u. s.", "US")
-  text = text.replace("U.S.", "US")
-  text = text.replace("u. n.", "UN")
+  # text = text.replace(" - ", "-")
+  # text = text.replace("u. s.", "US")
+  # text = text.replace("U.S.", "US")
+  # text = text.replace("u. n.", "UN")
   text = text.replace(" ’ ", "’")
   text = text.replace(" )", ")")
   text = text.replace("( ", "(")

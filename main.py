@@ -23,9 +23,9 @@ def main(models):
 
         for news in source.news:
             print(news['title'])
+            news['text'] = text_processor.clean_text(news['text'])
 
             for model in models:
-
                 try:
                     summary = model.summarize(news['text'])
                     summary = text_processor.clean_print_update(summary)
