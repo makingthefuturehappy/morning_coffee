@@ -26,6 +26,7 @@ def main(models):
             news['text'] = text_processor.clean_text(news['text'])
 
             for model in models:
+                print(model.model_name)
                 try:
                     summary = model.summarize(news['text'])
                     summary = text_processor.clean_print_update(summary)
@@ -36,7 +37,7 @@ def main(models):
 
                 except:
                     print("some error happened\n")
-                    # news.update({model.model_name: "fail"})
+                    news.update({model.model_name: "fail"})
                     continue
 
     # print statistics
