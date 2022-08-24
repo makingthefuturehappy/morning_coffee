@@ -30,7 +30,7 @@ def main(models):
                 # try:
                 summary = model.summarize(news['text'])
                 print("summary:\n", summary)
-                summary = text_processor.clean_print_update(summary)
+                # summary = text_processor.clean_print_update(summary)
                     # text_processor.clean_print_update(summary)
 
                     # update model statistics
