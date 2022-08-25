@@ -29,7 +29,9 @@ def main(models):
                 print(model.model_name)
                 # try:
                 summary = model.summarize(news['text'])
-                print("summary:\n", summary)
+                # print("summary:\n", summary)
+                text_processor.pretty_print(text)
+                return
                 # summary = text_processor.clean_print_update(summary)
                     # text_processor.clean_print_update(summary)
 
