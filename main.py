@@ -35,7 +35,7 @@ def main(models):
                     news.update({model.model_name: "fail"})
                     continue
 
-                news.update({news['text']: summary})
+                news.update({news['summary']: summary})
                 text_processor.pretty_print(summary)
                 news.update({model.model_name: "success"})
 
