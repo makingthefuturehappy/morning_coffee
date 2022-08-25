@@ -47,6 +47,7 @@ def pretty_print(text):
   for sentence in text:
     sentence.replace(' - ', '-')
     print("-",sentence)
+  print("\n")
   return
 
 def clean_print_update(summary, news:dict):

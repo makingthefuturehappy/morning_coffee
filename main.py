@@ -38,7 +38,7 @@ def main(models):
                 text_processor.pretty_print(summary)
                 news.update({model.model_name: "success"})
 
-    return
+    return news_sources
 
                     # update model statistics
 
