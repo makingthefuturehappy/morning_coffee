@@ -27,21 +27,24 @@ def main(models):
 
             for model in models:
                 print(model.model_name)
-                # try:
-                summary = model.summarize(news['text'])
-                # print("summary:\n", summary)
+                try:
+                    summary = model.summarize(news['text'])
+                except:
+                    print("some error happened\n")
+                    news.update({model.model_name: "fail"})
+                    continue
+
+                print("summary:\n", summary)
                 text_processor.pretty_print(summary)
+                news.update({model.model_name: "success"})
+
                 return
                 # summary = text_processor.clean_print_update(summary)
                     # text_processor.clean_print_update(summary)
 
                     # update model statistics
-                news.update({model.model_name: "success"})
 
-                # except:
-                #     print("some error happened\n")
-                #     news.update({model.model_name: "fail"})
-                #     continue
+
 
     # print statistics
     print("summarization result")
