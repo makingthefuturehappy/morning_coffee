@@ -35,32 +35,29 @@ def main(models):
                     news.update({model.model_name: "fail"})
                     continue
 
+                news.update({news['text']: summary})
                 text_processor.pretty_print(summary)
                 news.update({model.model_name: "success"})
 
     return news_sources
 
-                    # update model statistics
-
-
-    #
-    # # print statistics
-    # print("summarization result")
-    # for source in news_sources:
-    #     print("source:", source.source_name)
-    #     print("links_all   :", len(source.links_all))
-    #     print("useful      :", len(source.links_useful))
-    #     for model in models:
-    #         print("\n", model.model_name)
-    #         fails = 0
-    #         success = 0
-    #         for news in source.news:
-    #             if news[model.model_name] == "fail":
-    #                 fails += 1
-    #             elif news[model.model_name] == "success":
-    #                 success += 1
-    #         print("success total:", success)
-    #         print("failed total:", fails)
+    # print statistics
+    print("summarization result:")
+    for source in news_sources:
+        print("source:", source.source_name)
+        print("links_all   :", len(source.links_all))
+        print("useful      :", len(source.links_useful))
+        for model in models:
+            print("\n", model.model_name)
+            fails = 0
+            success = 0
+            for news in source.news:
+                if news[model.model_name] == "fail":
+                    fails += 1
+                elif news[model.model_name] == "success":
+                    success += 1
+            print("success total:", success)
+            print("failed total:", fails)
     #
     # # TG post
     #
