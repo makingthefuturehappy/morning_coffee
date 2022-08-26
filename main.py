@@ -35,6 +35,9 @@ def main(models):
                     news.update({model.model_name: "fail"})
                     continue
 
+                print('summary:')
+                print(summary)
+
                 print("\nupdate dic summary")
                 news.update({news['summary']: summary})
                 print("\nprint summary")
