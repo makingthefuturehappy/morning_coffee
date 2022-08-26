@@ -40,7 +40,7 @@ def main(models):
                 print(summary)
 
                 print("\nupdate dic summary")
-                # news.update({news['summary']: summary})
+                news['summary'] = summary
                 print("\nprint summary")
                 text_processor.pretty_print(summary)
                 print("\nupdate dic status")
