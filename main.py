@@ -4,17 +4,18 @@ import text_processor
 import tg
 import yaml
 
+
 def main(models):
     today = str(date.today().strftime("%Y/%m/%d"))
 
     # content parser
-    news_sources = [] # to keep news from all web sources
+    news_sources = []  # to keep news from all web sources
     cnbc = latam.cnbc(today)
     # economist = latam.economist(today)
     news_sources.append(
         cnbc,
-                        # economist
-                        )
+        # economist
+    )
     print("news load is done\n")
 
     # summarize
@@ -39,7 +40,7 @@ def main(models):
                 print(summary)
 
                 print("\nupdate dic summary")
-                news.update({news['summary']: summary})
+                # news.update({news['summary']: summary})
                 print("\nprint summary")
                 text_processor.pretty_print(summary)
                 print("\nupdate dic status")
