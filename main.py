@@ -36,14 +36,8 @@ def main(models):
                     news.update({model.model_name: "fail"})
                     continue
 
-                print('summary:')
-                print(summary)
-
-                print("\nupdate dic summary")
                 news['summary'] = summary
-                print("\nprint summary")
                 text_processor.pretty_print(summary)
-                print("\nupdate dic status")
                 news.update({model.model_name: "success"})
 
     return news_sources
