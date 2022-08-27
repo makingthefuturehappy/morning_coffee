@@ -13,16 +13,14 @@ def scan(today):
       cnbc.links_useful_qnnty = len(cnbc.links_useful)
 
   cnbc.get_news()
-  # paywall check
-  all_news = []
-  for news in cnbc.news:
-    if "Sign up for free newsletters" not in news['text']:
-      all_news.append(news)
-      # cnbc.news.remove(news)
-    else:
-      print('was not able to parse')
-      cnbc.links_skipped_qnnty += 1
-  cnbc.news = all_news
-  print("useful links qnnty:", cnbc.links_useful_qnnty)
+
+  # paywall check by content text
+  # for news in cnbc.news:
+  #   if news['status'] != "paywall":
+  #     if "Sign up for free newsletters" not in news['text']:
+  #       continue
+  #     else:
+  #       news['status'] = 'paywall'
+  #       print('paywall:', news['title'])
   print("The CNBC scan is done\n")
   return cnbc

@@ -4,7 +4,7 @@ import requests
 class Content():
 
   def __init__(self, url, source_name, date,
-                min_text_size=350  # if the text is less than this size, it will be skipped
+                min_text_size=500  # if the text is less than this size, it will be skipped
                 ):
       self.url = url
       self.source_name = source_name
@@ -64,16 +64,20 @@ class Content():
 
   def get_news(self):
       for link in self.links_useful:
-          title, text = self.get_content(link)
 
+          title, text = self.get_content(link)
+          news = {"date": self.date,
+                  "url": link,
+                  "text": text,
+                  "title": title,
+                  "status": None}
           # paywall check
           if len(text) < self.min_text_size:
               self.links_skipped_qnnty += 1
-              continue
+              news['status'] = "paywall"
           else:
-              news = {"date": self.date,
-                      "url": link,
-                      "text": text,
-                      "title": title}
-              self.news.append(news)
-      return self.news
+              news['status'] = "to be sum"
+
+          self.news.append(news)
+
+      return

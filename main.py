@@ -10,7 +10,7 @@ from summarizer import Philschmid_bart_large_cnn_samsum
 
 def main():
     # today = str(date.today().strftime("%Y/%m/%d"))
-    today = '2022/08/26'
+    today = '2022/08/27'
 
     models = [
         # Pegasus(),
@@ -23,12 +23,12 @@ def main():
 
     # content parser
     news_sources = []  # to keep news from all web sources
-    # LATIMES = latimes.scan(today)
-    CNBC = cnbc.scan(today)
+    LATIMES = latimes.scan(today)
+    news_sources.append(LATIMES)
     # economist = latam.economist(today)
 
+    CNBC = cnbc.scan(today)
     news_sources.append(CNBC)
-    # news_sources.append(LATIMES)
 
     print("news load is done\n")
 
@@ -39,21 +39,24 @@ def main():
 
         for news in source.news:
             print(news['title'])
-            news['text'] = text_processor.clean_text(news['text'])
+            if news['status'] != 'paywall':
+                news['text'] = text_processor.clean_text(news['text'])
+                for model in models:
+                    try:
+                        summary = model.summarize(news['text'])
+                    except:
+                        print(model.model_name)
+                        print("some error happened\n")
+                        news[model.model_name] = "fail"
+                        news['status'] = 'model failed'
+                        continue
 
-            for model in models:
-
-                try:
-                    summary = model.summarize(news['text'])
-                except:
-                    print(model.model_name)
-                    print("some error happened\n")
-                    news.update({model.model_name: "fail"})
-                    continue
-
-                news['summary'] = summary
-                text_processor.pretty_print(summary)
-                news.update({model.model_name: "success"})
+                    print(summary)
+                    summary = text_processor.clean_text(summary)
+                    news['summary'] = summary
+                    news['status'] = 'success'
+                    text_processor.pretty_print(summary)
+                    news[model.model_name] = "success"
 
     # print statistics
     print("summarization result:")
@@ -65,13 +68,19 @@ def main():
             print("\n", model.model_name)
             fails = 0
             success = 0
+            paywall = 0
             for news in source.news:
-                if news[model.model_name] == "fail":
+                if news["status"] == "fail":
                     fails += 1
-                elif news[model.model_name] == "success":
+                elif news["status"] == "success":
                     success += 1
+                else:
+                    news["status"] == "paywall"
+                    paywall += 1
             print("success total:", success)
-            print("failed total:", fails)
+            print("paywall total:", paywall)
+            print("sum failed total:", fails)
+
 
     # categorizer
     with open('key_words.yaml', 'r') as f:
@@ -109,7 +118,7 @@ def main():
              "token": config['tg']['token']}
     for source in news_sources:
         for news in source.news:
-            if news[model.model_name] != 'fail':
+            if news["status"] == 'success':
                 try:
                     tg_post = tg.format_for_tg(
                         news['url'],
@@ -118,8 +127,6 @@ def main():
                         news['summary'],
                         news['tags']
                     )
-                    # print(tg_post)
-                    # print("\n",tg_post)
                     tg.send_msg(creds, tg_post)
                 except:
                     print("failed to post:", news['title'])
