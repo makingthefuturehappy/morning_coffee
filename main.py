@@ -1,24 +1,39 @@
 from content_scan import latam as latam
+from content_scan import cnbc as cnbc
+from content_scan import latimes as latimes
+
 from datetime import date
 import text_processor
 import tg
 import yaml
+from summarizer import Philschmid_bart_large_cnn_samsum
 
+def main():
+    # today = str(date.today().strftime("%Y/%m/%d"))
+    today = '2022/08/26'
 
-def main(models):
-    today = str(date.today().strftime("%Y/%m/%d"))
+    models = [
+        # Pegasus(),
+        # Facebook_bart_large_cnn(),
+        Philschmid_bart_large_cnn_samsum(),
+        # MT5_multilingual_XLSum(),
+        # Small2bert_cnn_daily_mail(),
+    ]
+
 
     # content parser
     news_sources = []  # to keep news from all web sources
-    cnbc = latam.cnbc(today)
+    # LATIMES = latimes.scan(today)
+    CNBC = cnbc.scan(today)
     # economist = latam.economist(today)
-    news_sources.append(
-        cnbc,
-        # economist
-    )
+
+    news_sources.append(CNBC)
+    # news_sources.append(LATIMES)
+
     print("news load is done\n")
 
     # summarize
+    print("SUMMARIZATION:")
     for source in news_sources:
         print("source:", source.source_name)
 
@@ -40,8 +55,6 @@ def main(models):
                 text_processor.pretty_print(summary)
                 news.update({model.model_name: "success"})
 
-    return news_sources
-
     # print statistics
     print("summarization result:")
     for source in news_sources:
@@ -59,28 +72,58 @@ def main(models):
                     success += 1
             print("success total:", success)
             print("failed total:", fails)
-    #
-    # # TG post
-    #
-    # with open('config.yaml', 'r') as f:
-    #     config = yaml.safe_load(f)
-    #
-    # creds = {"chat_id": config['tg']['chat_id'],
-    #          "token": config['tg']['token']}
-    #
-    # for source in news_sources:
-    #     for news in source.news:
-    #         try:
-    #             tg_post = tg.format_for_tg(news['url'],
-    #                                     source.source_name,
-    #                                     news['title'],
-    #                                     news['summary'],
-    #                                     news['country'])
-    #             # print(tg_post)
-    #             # print("\n",tg_post)
-    #             tg.send_msg(creds, tg_post)
-    #         except:
-    #             print("failed summarization:", news['title'])
-    #
-    # return
-    # # return news_sources
+
+    # categorizer
+    with open('key_words.yaml', 'r') as f:
+        key_words = yaml.safe_load(f)
+
+    geos = key_words['geo']
+    companies = key_words['companies']
+    all_tags = geos + companies
+
+    for source in news_sources:
+        for news in source.news:
+            tags = []  # tags to be saved
+            news['tags'] = tags
+            for tag in all_tags:
+                if tag in news['text']:
+                    tags.append(tag)
+                    news['tags'] = tags
+
+            # to check qnnty off mentions
+            # from collections import Counter
+            # all_words = Counter([''.join(filter(str.isalpha, x.lower())) for x in news['text'].split() if
+            #                          ''.join(filter(str.isalpha, x.lower()))])
+            # for word, times in all_words.items():
+            #     if word in all_tags:
+            #         if times > 1:
+            #             tags.append(word)
+            # print(tags)
+            # news['tags'] = tags
+
+    # TG post
+    with open('creds.yaml', 'r') as f:
+        config = yaml.safe_load(f)
+
+    creds = {"chat_id": config['tg']['chat_id'],
+             "token": config['tg']['token']}
+    for source in news_sources:
+        for news in source.news:
+            if news[model.model_name] != 'fail':
+                try:
+                    tg_post = tg.format_for_tg(
+                        news['url'],
+                        source.source_name,
+                        news['title'],
+                        news['summary'],
+                        news['tags']
+                    )
+                    # print(tg_post)
+                    # print("\n",tg_post)
+                    tg.send_msg(creds, tg_post)
+                except:
+                    print("failed to post:", news['title'])
+
+    return news_sources
+
+news_sources = main()

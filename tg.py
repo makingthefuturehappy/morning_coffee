@@ -31,8 +31,6 @@ def format_for_tg(url, source_name, title, text, hashtags=[]):
   print(formatted_text)
 
   return formatted_text
-
-
 def send_msg(creds,  # chat, bot credentials
              text):
   url_req = "https://api.telegram.org/bot" + creds['token'] + \

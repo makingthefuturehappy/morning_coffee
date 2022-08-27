@@ -1,0 +1,13 @@
+# https://1cloud.ru/blog/yaml_for_beginners
+---
+geo:
+ - "Peru"
+ - "Chile"
+ - "Colombia"
+ - "Mexico"
+ - "Panama"
+ - "Brazil"
+
+companies:
+ - "Uber"
+
