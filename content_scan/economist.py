@@ -22,5 +22,3 @@ def scan(today):
   print("The Economist scan is done\n")
 
   return economist
-
-##############################

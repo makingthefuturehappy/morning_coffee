@@ -18,7 +18,7 @@ class Content():
 
       # initial setup
       self.news = []  # list of dicts with news
-      self.main_page = self.get_html(url, save_file=False)
+      self.main_page = self.get_html(url, save_file=True)
       self.links_all = self.get_links(self.main_page)
       self.links_all_qnnty = len(self.links_all)
       print("total links (all types):", self.links_all_qnnty)
@@ -27,7 +27,8 @@ class Content():
                 save_file=False  # if you want to save the html file
                 ):
       header = {
-          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"
+          "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Mobile/15E148 Safari/604.1"
+          # "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"
       }
       html = requests.get(url, headers=header)
       if html.status_code == 200:
