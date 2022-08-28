@@ -1,4 +1,7 @@
 from content_scan import economist as economist
+from content_scan import reuters as reuters
+from content_scan import guardian as guardian
+
 from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
 from joblib import dump, load
@@ -31,8 +34,14 @@ def main():
     # CNBC = cnbc.scan(today)
     # news_sources.append(CNBC)
 
-    ECONOMIST = economist.scan(today)
-    news_sources.append(ECONOMIST)
+    # ECONOMIST = economist.scan(today)
+    # news_sources.append(ECONOMIST)
+
+    # REUTERS = reuters.scan(today)
+    # news_sources.append(REUTERS)
+
+    GUARDIAN = guardian.scan(today)
+    news_sources.append(GUARDIAN)
 
     print("news load is done\n")
 
