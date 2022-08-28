@@ -14,7 +14,6 @@ from summarizer import Philschmid_bart_large_cnn_samsum
 
 def main():
     today = str(date.today().strftime("%Y/%m/%d"))
-    # today = '2022/08/27'
 
     models = [
         # Pegasus(),
