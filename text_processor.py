@@ -5,7 +5,9 @@ def clean_text(text):
   text = text.replace(" - ", "-")
   text = text.replace("u. s.", "US")
   text = text.replace("U.S.", "US")
+  text = text.replace("D.C.", "DC")
   text = text.replace("u. n.", "UN")
+  text = text.replace("U.N.", "UN")
   text = text.replace(" ’ ", "’")
   text = text.replace(" )", ")")
   text = text.replace("( ", "(")
@@ -16,26 +18,14 @@ def clean_text(text):
   repl = r'\1\3'
   text = re.sub(pattern, repl, text)
 
-  # Dr. Maa -> Dr.Mmm
-  # pattern = r'([Dr.])(\s)'
-  # repl = r'\1'
-  # text = re.sub(pattern, repl, text)
-
-  pattern = r'([a-z])(.)([0-9])'
-  repl = r'\1,\3'
+  # St. Louis -> St.Louis
+  pattern = r'(\s)([A-Z])([a-z])([.])(\s)([A-Z])'
+  repl = r'\1\2\3\4\6'
   text = re.sub(pattern, repl, text)
 
-  # pattern = r'([a-z])(.)(\s)([0-9])'
-  # repl = r'\1,\4'
-  # text = re.sub(pattern, repl, text)
-
-  pattern = r'([a-z][.])([A-Z])'
-  repl = r'\1 \2'
-  text = re.sub(pattern, repl, text)
-
-  #Dec. 31 -> Dec,31
-  pattern = r'([a-z])([.])(\s)([0-9])'
-  repl = r'\1,\4'
+  # Dec. 30 -> Dec,30
+  pattern = r'([A-Z])([a-z])([a-z])(.)([0-9])([0-9])(\s)'
+  repl = r'\1\2\3,\5\6\7'
   text = re.sub(pattern, repl, text)
 
   pattern = '(\d[.])(\s)(\d)'

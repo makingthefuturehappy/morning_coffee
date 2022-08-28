@@ -5,7 +5,7 @@ import db
 
 
 ############################
-def economist(today):
+def scan(today):
   print("The Economist")
   url = "https://www.economist.com/"
   economist = parser.Content(url, "The Economist", today)

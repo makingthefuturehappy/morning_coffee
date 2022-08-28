@@ -19,7 +19,7 @@ def format_for_tg(url, source_name, title, text, hashtags=[]):
   text = text.split('. ')
 
   for sentence in text:
-    sentence = "- " + sentence + "\n"
+    sentence = "- " + sentence + "\n\n"
     formatted_text += sentence
 
   hasgtag_line = " "
@@ -28,9 +28,8 @@ def format_for_tg(url, source_name, title, text, hashtags=[]):
     hasgtag_line += hashtag
 
   formatted_text += hasgtag_line
-  print(formatted_text)
-
   return formatted_text
+
 def send_msg(creds,  # chat, bot credentials
              text):
   url_req = "https://api.telegram.org/bot" + creds['token'] + \
@@ -39,5 +38,4 @@ def send_msg(creds,  # chat, bot credentials
             "&parse_mode=HTML" + \
             "&disable_web_page_preview=True"
   results = requests.get(url_req)
-  # print(results.json())
   return

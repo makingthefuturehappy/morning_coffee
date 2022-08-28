@@ -1,6 +1,7 @@
-from content_scan import latam as latam
+from content_scan import economist as economist
 from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
+from joblib import dump, load
 
 from datetime import date
 import text_processor
@@ -9,8 +10,8 @@ import yaml
 from summarizer import Philschmid_bart_large_cnn_samsum
 
 def main():
-    # today = str(date.today().strftime("%Y/%m/%d"))
-    today = '2022/08/27'
+    today = str(date.today().strftime("%Y/%m/%d"))
+    # today = '2022/08/27'
 
     models = [
         # Pegasus(),
@@ -23,12 +24,15 @@ def main():
 
     # content parser
     news_sources = []  # to keep news from all web sources
-    LATIMES = latimes.scan(today)
-    news_sources.append(LATIMES)
-    # economist = latam.economist(today)
 
-    CNBC = cnbc.scan(today)
-    news_sources.append(CNBC)
+    # LATIMES = latimes.scan(today)
+    # news_sources.append(LATIMES)
+    #
+    # CNBC = cnbc.scan(today)
+    # news_sources.append(CNBC)
+
+    ECONOMIST = economist.scan(today)
+    news_sources.append(ECONOMIST)
 
     print("news load is done\n")
 
@@ -40,7 +44,6 @@ def main():
         for news in source.news:
             print(news['title'])
             if news['status'] != 'paywall':
-                news['text'] = text_processor.clean_text(news['text'])
                 for model in models:
                     try:
                         summary = model.summarize(news['text'])
@@ -51,12 +54,16 @@ def main():
                         news['status'] = 'model failed'
                         continue
 
-                    print(summary)
                     summary = text_processor.clean_text(summary)
                     news['summary'] = summary
                     news['status'] = 'success'
-                    text_processor.pretty_print(summary)
                     news[model.model_name] = "success"
+                    text_processor.pretty_print(summary)
+
+    # # to_save
+    # # dump(news_sources, 'news_sources.joblib')
+    # news_sources = load('news_sources.joblib')
+
 
     # print statistics
     print("summarization result:")
