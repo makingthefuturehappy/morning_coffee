@@ -2,7 +2,7 @@ from content_scan import economist as economist
 from content_scan import reuters as reuters
 from content_scan import guardian as guardian
 from content_scan import cnn as cnn
-from content_scan import eldebate as eldebate
+from content_scan import vanguardia as vangurdia
 
 from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
@@ -28,27 +28,27 @@ def main():
 
     # content parser
     news_sources = []  # to keep news from all web sources
+    #
+    # LATIMES = latimes.scan(today)
+    # news_sources.append(LATIMES)
+    #
+    # CNBC = cnbc.scan(today)
+    # news_sources.append(CNBC)
+    #
+    # ECONOMIST = economist.scan(today)
+    # news_sources.append(ECONOMIST)
+    #
+    # REUTERS = reuters.scan(today)
+    # news_sources.append(REUTERS)
+    #
+    # GUARDIAN = guardian.scan(today)
+    # news_sources.append(GUARDIAN)
 
-    LATIMES = latimes.scan(today)
-    news_sources.append(LATIMES)
+    VANGUARDIA = vangurdia.scan(today)
+    news_sources.append(VANGUARDIA)
 
-    CNBC = cnbc.scan(today)
-    news_sources.append(CNBC)
-
-    ECONOMIST = economist.scan(today)
-    news_sources.append(ECONOMIST)
-
-    REUTERS = reuters.scan(today)
-    news_sources.append(REUTERS)
-
-    GUARDIAN = guardian.scan(today)
-    news_sources.append(GUARDIAN)
-
-    ELDEBATE = eldebate.scan(today)
-    news_sources.append(ELDEBATE)
-
-    CNN = cnn.scan(today)
-    news_sources.append(CNN)
+    # CNN = cnn.scan(today)
+    # news_sources.append(CNN)
 
     print("news load is done\n")
 
