@@ -1,3 +1,4 @@
+import traslate
 from content_scan import economist as economist
 from content_scan import reuters as reuters
 from content_scan import guardian as guardian
@@ -7,6 +8,7 @@ from content_scan import vanguardia as vangurdia
 from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
 from joblib import dump, load
+from traslate import translate
 
 from datetime import date
 import text_processor
@@ -29,26 +31,26 @@ def main():
     # content parser
     news_sources = []  # to keep news from all web sources
     #
-    # LATIMES = latimes.scan(today)
-    # news_sources.append(LATIMES)
-    #
-    # CNBC = cnbc.scan(today)
-    # news_sources.append(CNBC)
-    #
-    # ECONOMIST = economist.scan(today)
-    # news_sources.append(ECONOMIST)
-    #
-    # REUTERS = reuters.scan(today)
-    # news_sources.append(REUTERS)
-    #
-    # GUARDIAN = guardian.scan(today)
-    # news_sources.append(GUARDIAN)
+    LATIMES = latimes.scan(today)
+    news_sources.append(LATIMES)
 
-    VANGUARDIA = vangurdia.scan(today)
-    news_sources.append(VANGUARDIA)
+    CNBC = cnbc.scan(today)
+    news_sources.append(CNBC)
 
-    # CNN = cnn.scan(today)
-    # news_sources.append(CNN)
+    ECONOMIST = economist.scan(today)
+    news_sources.append(ECONOMIST)
+
+    REUTERS = reuters.scan(today)
+    news_sources.append(REUTERS)
+
+    GUARDIAN = guardian.scan(today)
+    news_sources.append(GUARDIAN)
+
+    # VANGUARDIA = vangurdia.scan(today)
+    # news_sources.append(VANGUARDIA)
+
+    CNN = cnn.scan(today)
+    news_sources.append(CNN)
 
     print("news load is done\n")
 
@@ -58,8 +60,16 @@ def main():
         print("source:", source.source_name)
 
         for news in source.news:
+
             print(news['title'])
             if news['status'] != 'paywall':
+
+                # translate to eng
+                if news['status'] == 'translate_from_esp':
+                    news['text'] = traslate.translate(news['text'])
+                    news['title'] = traslate.translate(news['title'])
+                    news['status'] == 'to_sum'
+
                 for model in models:
                     try:
                         summary = model.summarize(news['text'])
