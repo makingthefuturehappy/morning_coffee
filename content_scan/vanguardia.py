@@ -22,6 +22,10 @@ def scan(today):
 
   vangurdia.get_news()
 
+    # set status for translation
+  for news in vangurdia.news:
+      if news['status'] != 'paywall':
+          news['status'] = 'translate_from_esp'
 
   print("VANGUARDIA scan is done\n")
   return vangurdia
