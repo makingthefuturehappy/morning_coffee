@@ -3,6 +3,7 @@ from content_scan import reuters as reuters
 from content_scan import guardian as guardian
 from content_scan import cnn as cnn
 from content_scan import vanguardia as vangurdia
+from content_scan import folha as folha
 
 from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
@@ -17,13 +18,13 @@ from summarizer import Philschmid_bart_large_cnn_samsum
 def main():
     today = str(date.today().strftime("%Y/%m/%d"))
 
-    models = [
-        # Pegasus(),
-        # Facebook_bart_large_cnn(),
-        Philschmid_bart_large_cnn_samsum(),
-        # MT5_multilingual_XLSum(),
-        # Small2bert_cnn_daily_mail(),
-    ]
+    # models = [
+    #     # Pegasus(),
+    #     # Facebook_bart_large_cnn(),
+    #     Philschmid_bart_large_cnn_samsum(),
+    #     # MT5_multilingual_XLSum(),
+    #     # Small2bert_cnn_daily_mail(),
+    # ]
 
 
     # content parser
@@ -44,8 +45,11 @@ def main():
     # GUARDIAN = guardian.scan(today)
     # news_sources.append(GUARDIAN)
 
-    VANGUARDIA = vangurdia.scan(today)
-    news_sources.append(VANGUARDIA)
+    # VANGUARDIA = vangurdia.scan(today)
+    # news_sources.append(VANGUARDIA)
+
+    FOLHA = folha.scan(today)
+    news_sources.append(FOLHA)
 
     # CNN = cnn.scan(today)
     # news_sources.append(CNN)
