@@ -8,8 +8,11 @@ def scan(today):
 
   # useful links selection
   for link in cnn.links_all:
-      if today in link:
-          cnn.links_useful.append(link)
+      try:
+          if today in link:
+              cnn.links_useful.append(link)
+      except:
+            continue
       cnn.links_useful_qnnty = len(cnn.links_useful)
 
   cnn.get_news()
