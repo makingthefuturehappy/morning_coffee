@@ -9,12 +9,15 @@ from content_scan import latimes as latimes
 
 from joblib import dump, load
 from datetime import date
+from db import DB
 import text_processor
 import tg
 import yaml
 
 def main():
-    today = str(date.today().strftime("%Y/%m/%d"))
+    # today = str(date.today().strftime("%Y/%m/%d"))
+    today = "2022/09/01"
+    db = DB("links.txt")
 
     # models = [
     #     # Pegasus(),
@@ -24,33 +27,32 @@ def main():
     #     # Small2bert_cnn_daily_mail(),
     # ]
 
-
     # content parser
     news_sources = []  # to keep news from all web sources
-    #
-    # LATIMES = latimes.scan(today)
-    # news_sources.append(LATIMES)
-    #
+    # #
     # CNBC = cnbc.scan(today)
     # news_sources.append(CNBC)
-    #
+
+    # CNN = cnn.scan(today)
+    # news_sources.append(CNN)
+
     # ECONOMIST = economist.scan(today)
     # news_sources.append(ECONOMIST)
+
+    # FOLHA = folha.scan(today, db)
+    # news_sources.append(FOLHA)
+
+    # GUARDIAN = guardian.scan(today)
+    # news_sources.append(GUARDIAN)
+
+    # LATIMES = latimes.scan(today)
+    # news_sources.append(LATIMES)
     #
     # REUTERS = reuters.scan(today)
     # news_sources.append(REUTERS)
     #
-    # GUARDIAN = guardian.scan(today)
-    # news_sources.append(GUARDIAN)
-
-    # VANGUARDIA = vangurdia.scan(today)
-    # news_sources.append(VANGUARDIA)
-
-    FOLHA = folha.scan(today)
-    news_sources.append(FOLHA)
-
-    # CNN = cnn.scan(today)
-    # news_sources.append(CNN)
+    VANGUARDIA = vangurdia.scan(today, db)
+    news_sources.append(VANGUARDIA)
 
     print("news load is done\n")
 

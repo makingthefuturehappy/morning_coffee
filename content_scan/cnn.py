@@ -2,6 +2,9 @@ import parser
 import db
 
 def scan(today):
+
+  #parsing is blocked by CNN
+
   print("CNN")
   url = "https://edition.cnn.com/americas"
   cnn = parser.Content(url, "CNN", today)
