@@ -4,16 +4,14 @@ from content_scan import guardian as guardian
 from content_scan import cnn as cnn
 from content_scan import vanguardia as vangurdia
 from content_scan import folha as folha
-
 from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
-from joblib import dump, load
 
+from joblib import dump, load
 from datetime import date
 import text_processor
 import tg
 import yaml
-from summarizer import Philschmid_bart_large_cnn_samsum
 
 def main():
     today = str(date.today().strftime("%Y/%m/%d"))

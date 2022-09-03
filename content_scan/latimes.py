@@ -15,15 +15,6 @@ def scan(today):
         if line_to_search in link:
             latimes.links_useful.append(link)
 
-    # check dublicates
-    file = open(file_path, 'r')
-    links = file.readlines()
-    links_saved = [link.rstrip('\n') for link in links]
-    latimes.links_useful = db.check_duplicate(links_saved, latimes.links_useful)
-
-    # db.save_links(file_path,
-    #               links_saved + latimes.links_useful)
-
     latimes.get_news()
     latimes.links_useful_qnnty = len(latimes.links_useful)
     print("useful links qnnty:", latimes.links_useful_qnnty)
