@@ -4,13 +4,16 @@ def clean_text(text):
 
   text = text.replace(" - ", "-")
   text = text.replace("u. s.", "US")
+  text = text.replace("p.m.", "pm")
   text = text.replace("U.S.", "US")
+  text = text.replace("U.K.", "UK")
   text = text.replace("D.C.", "DC")
   text = text.replace("u. n.", "UN")
   text = text.replace("U.N.", "UN")
   text = text.replace(" ’ ", "’")
   text = text.replace(" )", ")")
   text = text.replace("( ", "(")
+  text = text.replace(" percent", "%")
   text = text.replace(" %", "%")
   text = text.replace("$ ", "$")
 

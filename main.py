@@ -9,6 +9,7 @@ from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
 
 from summarizer import Philschmid_bart_large_cnn_samsum
+from zero_shot import bart_large_mnli
 
 from joblib import dump, load
 from datetime import date
@@ -31,30 +32,33 @@ def main():
         # Small2bert_cnn_daily_mail(),
     ]
 
+    zero_shot = bart_large_mnli()
+
     # content parser
     news_sources = []  # to keep news from all web sources
     # #
-    # CNBC = cnbc.scan(today)
-    # news_sources.append(CNBC)
+    CNBC = cnbc.scan(today)
+    news_sources.append(CNBC)
 
-    # CNN = cnn.scan(today)
-    # news_sources.append(CNN)
+    CNN = cnn.scan(today)
+    news_sources.append(CNN)
 
-    # ECONOMIST = economist.scan(today)
-    # news_sources.append(ECONOMIST)
+    ECONOMIST = economist.scan(today)
+    news_sources.append(ECONOMIST)
 
-    # FOLHA = folha.scan(today, db)
-    # news_sources.append(FOLHA)
+    FOLHA = folha.scan(today, db)
+    news_sources.append(FOLHA)
 
-    # GUARDIAN = guardian.scan(today)
-    # news_sources.append(GUARDIAN)
+    GUARDIAN = guardian.scan(today)
+    news_sources.append(GUARDIAN)
 
-    # LATIMES = latimes.scan(today)
-    # news_sources.append(LATIMES)
-    #
-    # REUTERS = reuters.scan(today)
-    # news_sources.append(REUTERS)
-    #
+    LATIMES = latimes.scan(today)
+    news_sources.append(LATIMES)
+
+    REUTERS = reuters.scan(today)
+    news_sources.append(REUTERS)
+
+
     VANGUARDIA = vangurdia.scan(today,db)
     news_sources.append(VANGUARDIA)
 
@@ -93,10 +97,10 @@ def main():
                     news['summary'] = summary
                     news['status'] = 'success'
                     news[model.model_name] = "success"
-                    text_processor.pretty_print(summary)
+                    # text_processor.pretty_print(summary)
 
-    # # to_save
-    # # dump(news_sources, 'news_sources.joblib')
+    # to_save
+    # dump(news_sources, 'news_sources.joblib')
     # news_sources = load('news_sources.joblib')
 
 
@@ -123,6 +127,30 @@ def main():
             print("paywall total:", paywall)
             print("sum failed total:", fails)
 
+    # labeling
+    print("ZERO-SHOT LABELING:")
+    labels = ['politics', 'crime', 'taxi', 'natural disasters', 'mass murder', 'national holiday', 'flood']
+    for source in news_sources:
+        print("source:", source.source_name)
+        for news in source.news:
+            try:
+                z_result = zero_shot.zero_shot(news['text'], labels)
+
+                print(news['title'])
+                text_processor.pretty_print(news['summary'])
+
+                scores = z_result['scores']
+                labels = z_result['labels']
+
+                zero_shot_list = [] # to keep all zero-shot labels
+                for i in range(0, len(labels)):
+                    score = round(scores[i], 2)
+                    zero_shot_list.append(str(labels[i]) + ": " + str(score))
+                    news['zero_shot'] = zero_shot_list
+                    print(labels[i], score)
+                print("-----------------------------------\n")
+            except:
+                continue
 
     # categorizer
     with open('key_words.yaml', 'r') as f:

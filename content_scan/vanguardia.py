@@ -19,9 +19,9 @@ def scan(today, db):
       except:
           continue
 
-  # vangurdia.links_useful = db.return_new_links(vangurdia.links_useful)
-  # db.save_new_links(vangurdia.links_useful)
-  # vangurdia.links_useful_qnnty = len(vangurdia.links_useful)
+  vangurdia.links_useful = db.return_new_links(vangurdia.links_useful)
+  db.save_new_links(vangurdia.links_useful)
+  vangurdia.links_useful_qnnty = len(vangurdia.links_useful)
 
   vangurdia.get_news()
 
