@@ -1,3 +1,4 @@
+import traslate
 from content_scan import economist as economist
 from content_scan import reuters as reuters
 from content_scan import guardian as guardian
@@ -7,10 +8,13 @@ from content_scan import folha as folha
 from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
 
+from summarizer import Philschmid_bart_large_cnn_samsum
+
 from joblib import dump, load
 from datetime import date
 from db import DB
 import text_processor
+import traslate as translate
 import tg
 import yaml
 
@@ -19,13 +23,13 @@ def main():
     today = "2022/09/01"
     db = DB("links.txt")
 
-    # models = [
-    #     # Pegasus(),
-    #     # Facebook_bart_large_cnn(),
-    #     Philschmid_bart_large_cnn_samsum(),
-    #     # MT5_multilingual_XLSum(),
-    #     # Small2bert_cnn_daily_mail(),
-    # ]
+    models = [
+        # Pegasus(),
+        # Facebook_bart_large_cnn(),
+        Philschmid_bart_large_cnn_samsum(),
+        # MT5_multilingual_XLSum(),
+        # Small2bert_cnn_daily_mail(),
+    ]
 
     # content parser
     news_sources = []  # to keep news from all web sources
@@ -56,7 +60,18 @@ def main():
 
     print("news load is done\n")
 
-    # summarize
+    # translate
+    print("translating from spanish to english...")
+    for source in news_sources:
+        print("source:", source.source_name)
+        for news in source.news:
+            if news['status'] == 'translate_from_esp':
+                print("title esp:", news['title'])
+                news['title'] = traslate.translate(news['title'])
+                print("title eng:", news['title'], "\n")
+                news['text'] = traslate.translate(news['text'])
+
+# summarize
     print("SUMMARIZATION:")
     for source in news_sources:
         print("source:", source.source_name)
