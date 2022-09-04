@@ -51,7 +51,7 @@ def main():
     # REUTERS = reuters.scan(today)
     # news_sources.append(REUTERS)
     #
-    VANGUARDIA = vangurdia.scan(today, db)
+    VANGUARDIA = vangurdia.scan(today,db)
     news_sources.append(VANGUARDIA)
 
     print("news load is done\n")

@@ -32,6 +32,7 @@ class Content():
       }
       html = requests.get(url, headers=header)
       if html.status_code == 200:
+          html.encoding = "utf-8"
           if save_file:
               with open("main_page.html", "w") as f:
                   f.write(html.text)
