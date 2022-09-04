@@ -16,3 +16,11 @@ companies:
  - "Bolt"
  - "Lyft"
 
+zero_shots:
+ - 'politics'
+ - 'crime'
+ - 'taxi'
+ - 'natural disasters'
+ - 'mass murder'
+ - 'national holiday'
+ - 'flood'

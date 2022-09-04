@@ -20,9 +20,11 @@ import tg
 import yaml
 
 def main():
-    # today = str(date.today().strftime("%Y/%m/%d"))
-    today = "2022/09/01"
+    today = str(date.today().strftime("%Y/%m/%d"))
+    # today = "2022/09/01"
     db = DB("links.txt")
+    with open('key_words.yaml', 'r') as f:
+        key_words = yaml.safe_load(f)
 
     models = [
         # Pegasus(),
@@ -58,7 +60,6 @@ def main():
     REUTERS = reuters.scan(today)
     news_sources.append(REUTERS)
 
-
     VANGUARDIA = vangurdia.scan(today,db)
     news_sources.append(VANGUARDIA)
 
@@ -81,7 +82,6 @@ def main():
         print("source:", source.source_name)
 
         for news in source.news:
-            print(news['title'])
             if news['status'] != 'paywall':
                 for model in models:
                     try:
@@ -127,35 +127,25 @@ def main():
             print("paywall total:", paywall)
             print("sum failed total:", fails)
 
-    # labeling
+    # Zero-Shot labeling
     print("ZERO-SHOT LABELING:")
-    labels = ['politics', 'crime', 'taxi', 'natural disasters', 'mass murder', 'national holiday', 'flood']
+    labels = key_words['zero_shots']
+
     for source in news_sources:
-        print("source:", source.source_name)
+        print("\nsource:", source.source_name)
         for news in source.news:
             try:
-                z_result = zero_shot.zero_shot(news['text'], labels)
-
                 print(news['title'])
                 text_processor.pretty_print(news['summary'])
+                news['zero_shot'] = zero_shot.zero_shot(news['text'], labels)
 
-                scores = z_result['scores']
-                labels = z_result['labels']
-
-                zero_shot_list = [] # to keep all zero-shot labels
-                for i in range(0, len(labels)):
-                    score = round(scores[i], 2)
-                    zero_shot_list.append(str(labels[i]) + ": " + str(score))
-                    news['zero_shot'] = zero_shot_list
-                    print(labels[i], score)
+                for shot in news['zero_shot']:
+                    print(shot)
                 print("-----------------------------------\n")
             except:
                 continue
 
     # categorizer
-    with open('key_words.yaml', 'r') as f:
-        key_words = yaml.safe_load(f)
-
     geos = key_words['geo']
     companies = key_words['companies']
     all_tags = geos + companies
