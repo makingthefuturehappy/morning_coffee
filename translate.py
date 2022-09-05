@@ -1,4 +1,3 @@
-import translators as ts
 
 def translate(text, translator='google', from_language='es', to_language="en"):
     if translator == 'google':
