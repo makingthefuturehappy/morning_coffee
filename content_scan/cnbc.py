@@ -1,5 +1,4 @@
 import parser
-import db
 
 def scan(today):
   print("CNBC")
