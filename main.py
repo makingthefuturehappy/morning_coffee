@@ -8,8 +8,8 @@ from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
 from content_scan import financiero as financiero
 
-# from summarizer import Philschmid_bart_large_cnn_samsum
-# from zero_shot import bart_large_mnli
+from summarizer import Philschmid_bart_large_cnn_samsum
+from zero_shot import bart_large_mnli
 
 from joblib import dump, load
 from datetime import date
@@ -26,15 +26,15 @@ def main():
     with open('key_words.yaml', 'r') as f:
         key_words = yaml.safe_load(f)
 
-    # models = [
-    #     # Pegasus(),
-    #     # Facebook_bart_large_cnn(),
-    #     Philschmid_bart_large_cnn_samsum(),
-    #     # MT5_multilingual_XLSum(),
-    #     # Small2bert_cnn_daily_mail(),
-    # ]
-    #
-    # zero_shot = bart_large_mnli()
+    models = [
+        # Pegasus(),
+        # Facebook_bart_large_cnn(),
+        Philschmid_bart_large_cnn_samsum(),
+        # MT5_multilingual_XLSum(),
+        # Small2bert_cnn_daily_mail(),
+    ]
+
+    zero_shot = bart_large_mnli()
 
     # content parser
     news_sources = []  # to keep news from all web sources
@@ -60,11 +60,11 @@ def main():
     # REUTERS = reuters.scan(today)
     # news_sources.append(REUTERS)
     #
-    # VANGUARDIA = vangurdia.scan(today,db)
-    # news_sources.append(VANGUARDIA)
+    VANGUARDIA = vangurdia.scan(today,db)
+    news_sources.append(VANGUARDIA)
 
     FINANCIERO = financiero.scan(today)
-    news_sources.append(financiero)
+    news_sources.append(FINANCIERO)
 
     print("news load is done\n")
 

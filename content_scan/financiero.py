@@ -8,6 +8,7 @@ def scan(today):
   # useful links selection
   for link in financiero.links_all:
       if today in link:
+          link = url + link
           financiero.links_useful.append(link)
       financiero.links_useful_qnnty = len(financiero.links_useful)
 
