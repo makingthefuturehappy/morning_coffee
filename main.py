@@ -1,4 +1,3 @@
-import traslate
 from content_scan import economist as economist
 from content_scan import reuters as reuters
 from content_scan import guardian as guardian
@@ -15,7 +14,7 @@ from joblib import dump, load
 from datetime import date
 from db import DB
 import text_processor
-import traslate as translate
+import translate as translate
 import tg
 import yaml
 
