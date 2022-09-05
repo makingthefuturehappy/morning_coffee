@@ -15,12 +15,15 @@ companies:
  - "taxi"
  - "Bolt"
  - "Lyft"
+ - "Yandex"
+ - "Yango"
 
 zero_shots:
- - 'politics'
+ - 'economics'
  - 'crime'
  - 'taxi'
  - 'natural disasters'
  - 'mass murder'
  - 'national holiday'
  - 'flood'
+ - 'heavy rain'
