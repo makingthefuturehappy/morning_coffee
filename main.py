@@ -157,7 +157,6 @@ def main():
             for tag in all_tags:
                 if tag in news['text']:
                     tags.append(tag)
-                    news['tags'] = tags
 
             # to check qnnty off mentions
             # from collections import Counter
