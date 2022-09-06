@@ -60,8 +60,8 @@ def main():
     # REUTERS = reuters.scan(today)
     # news_sources.append(REUTERS)
     #
-    VANGUARDIA = vangurdia.scan(today,db)
-    news_sources.append(VANGUARDIA)
+    # VANGUARDIA = vangurdia.scan(today,db)
+    # news_sources.append(VANGUARDIA)
 
     FINANCIERO = financiero.scan(today)
     news_sources.append(FINANCIERO)

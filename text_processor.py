@@ -16,6 +16,7 @@ def clean_text(text):
   text = text.replace(" percent", "%")
   text = text.replace(" %", "%")
   text = text.replace("$ ", "$")
+  text = text.replace(" vs.", " vs")
 
   pattern = '(\d[,])(\s)(\d)'
   repl = r'\1\3'
