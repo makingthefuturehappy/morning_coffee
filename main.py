@@ -20,8 +20,8 @@ import tg
 import yaml
 
 def main():
-    today = str(date.today().strftime("%Y/%m/%d"))
-    # today = "2022/09/01"
+    # today = str(date.today().strftime("%Y/%m/%d"))
+    today = "2022/09/07"
     db = DB("links.txt")
     with open('key_words.yaml', 'r') as f:
         key_words = yaml.safe_load(f)
@@ -39,29 +39,29 @@ def main():
     # content parser
     news_sources = []  # to keep news from all web sources
     #
-    # CNBC = cnbc.scan(today)
-    # news_sources.append(CNBC)
-    #
-    # CNN = cnn.scan(today)
-    # news_sources.append(CNN)
-    #
-    # ECONOMIST = economist.scan(today)
-    # news_sources.append(ECONOMIST)
-    #
-    # FOLHA = folha.scan(today, db)
-    # news_sources.append(FOLHA)
-    #
-    # GUARDIAN = guardian.scan(today)
-    # news_sources.append(GUARDIAN)
-    #
-    # LATIMES = latimes.scan(today)
-    # news_sources.append(LATIMES)
-    #
-    # REUTERS = reuters.scan(today)
-    # news_sources.append(REUTERS)
-    #
-    # VANGUARDIA = vangurdia.scan(today,db)
-    # news_sources.append(VANGUARDIA)
+    CNBC = cnbc.scan(today)
+    news_sources.append(CNBC)
+
+    CNN = cnn.scan(today)
+    news_sources.append(CNN)
+
+    ECONOMIST = economist.scan(today)
+    news_sources.append(ECONOMIST)
+
+    FOLHA = folha.scan(today, db)
+    news_sources.append(FOLHA)
+
+    GUARDIAN = guardian.scan(today)
+    news_sources.append(GUARDIAN)
+
+    LATIMES = latimes.scan(today)
+    news_sources.append(LATIMES)
+
+    REUTERS = reuters.scan(today)
+    news_sources.append(REUTERS)
+
+    VANGUARDIA = vangurdia.scan(today,db)
+    news_sources.append(VANGUARDIA)
 
     FINANCIERO = financiero.scan(today)
     news_sources.append(FINANCIERO)
@@ -77,7 +77,15 @@ def main():
                 print("title esp:", news['title'])
                 news['title'] = translate.translate(news['title'])
                 print("title eng:", news['title'], "\n")
-                news['text'] = translate.translate(news['text'])
+
+                traslated_text = translate.translate(news['text'])
+                if traslated_text != "translation error":
+                    news['text'] = traslated_text
+                    news['status'] = "to be sum"
+                else:
+                    news['status'] = 'translation error'
+
+
 
 # summarize
     print("SUMMARIZATION:")
@@ -85,7 +93,7 @@ def main():
         print("source:", source.source_name)
 
         for news in source.news:
-            if news['status'] != 'paywall':
+            if news['status'] == 'to be sum':
                 for model in models:
                     try:
                         summary = model.summarize(news['text'])
@@ -100,10 +108,9 @@ def main():
                     news['summary'] = summary
                     news['status'] = 'success'
                     news[model.model_name] = "success"
-                    # text_processor.pretty_print(summary)
 
     # to_save
-    # dump(news_sources, 'news_sources.joblib')
+    dump(news_sources, 'news_sources.joblib')
     # news_sources = load('news_sources.joblib')
 
 
@@ -130,24 +137,6 @@ def main():
             print("paywall total:", paywall)
             print("sum failed total:", fails)
 
-    # Zero-Shot labeling
-    print("ZERO-SHOT LABELING:")
-    labels = key_words['zero_shots']
-
-    for source in news_sources:
-        print("\nsource:", source.source_name)
-        for news in source.news:
-            try:
-                print(news['title'])
-                text_processor.pretty_print(news['summary'])
-                news['zero_shot'] = zero_shot.zero_shot(news['text'], labels)
-
-                for shot in news['zero_shot']:
-                    print(shot)
-                print("-----------------------------------\n")
-            except:
-                continue
-
     # categorizer
     geos = key_words['geo']
     companies = key_words['companies']
@@ -155,11 +144,12 @@ def main():
 
     for source in news_sources:
         for news in source.news:
-            tags = []  # tags to be saved
-            news['tags'] = tags
-            for tag in all_tags:
-                if tag in news['text']:
-                    tags.append(tag)
+            if news['status'] == "success":
+                tags = []  # tags to be saved
+                news['tags'] = tags
+                for tag in all_tags:
+                    if tag in news['text']:
+                        tags.append(tag)
 
             # to check qnnty off mentions
             # from collections import Counter
@@ -171,6 +161,25 @@ def main():
             #             tags.append(word)
             # print(tags)
             # news['tags'] = tags
+
+
+    # Zero-Shot labeling
+    print("ZERO-SHOT LABELING:")
+    labels = key_words['zero_shots']
+
+    for source in news_sources:
+        for news in source.news:
+            try:
+                print("\nsource:", source.source_name)
+                print(news['title'])
+                text_processor.pretty_print(news['summary'])
+                print(news['tags'])
+                news['zero_shot'] = zero_shot.zero_shot(news['text'], labels)
+                for shot in news['zero_shot']:
+                    print(shot)
+                print("-----------------------------------\n")
+            except:
+                continue
 
     # TG post
     with open('creds.yaml', 'r') as f:

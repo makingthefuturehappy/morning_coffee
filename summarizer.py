@@ -40,7 +40,7 @@ class Philschmid_bart_large_cnn_samsum():
     self.summarizer = pipeline("summarization", model="philschmid/bart-large-cnn-samsum")
 
   def summarize(self, src_text):
-    print("model Philschmid_bart_large_cnn_samsum:")
+    # print("model Philschmid_bart_large_cnn_samsum:")
     tgt_text = self.summarizer(src_text, truncation=True)
     tgt_text = tgt_text[0]['summary_text']
     return tgt_text

@@ -7,9 +7,9 @@ def translate(text, translator='google', from_language='es', to_language="en"):
             return text
         except:
             print("translation error")
-            text = "was not translated"
+            text = "translation error"
             return text
     else:
-        print("translation error")
-        text = "was not translated"
+        print("translation modul error")
+        text = "translation error"
         return text

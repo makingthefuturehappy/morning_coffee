@@ -14,8 +14,10 @@ class bart_large_mnli():
         zero_shot_list = []
 
         try:
-            z_result = self.classifier(text, labels)
-
+            z_result = self.classifier(text,
+                                       labels,
+                                       # multi_class=True
+                                       )
             #round up
             scores = []
             for score in z_result['scores']:
