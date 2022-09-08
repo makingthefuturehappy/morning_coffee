@@ -5,6 +5,7 @@ def clean_text(text):
   text = text.replace(" - ", "-")
   text = text.replace("u. s.", "US")
   text = text.replace("p.m.", "pm")
+  text = text.replace("a.m.", "am")
   text = text.replace("U.S.", "US")
   text = text.replace("U.K.", "UK")
   text = text.replace("D.C.", "DC")
@@ -17,6 +18,7 @@ def clean_text(text):
   text = text.replace(" %", "%")
   text = text.replace("$ ", "$")
   text = text.replace(" vs.", " vs")
+  text = text.replace(" Corp.", " Corp")
 
   pattern = '(\d[,])(\s)(\d)'
   repl = r'\1\3'

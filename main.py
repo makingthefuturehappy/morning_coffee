@@ -20,11 +20,22 @@ import tg
 import yaml
 
 def main():
+
+    zero_shot_analysis = False
+    tg_post = False
+
+
     # today = str(date.today().strftime("%Y/%m/%d"))
-    today = "2022/09/07"
+    today = "2022/09/08"
     db = DB("links.txt")
+
+    # load key_words
     with open('key_words.yaml', 'r') as f:
         key_words = yaml.safe_load(f)
+    geos = key_words['geo']
+    companies = key_words['companies']
+    refs = key_words['refs']
+    all_tags = geos + companies
 
     models = [
         # Pegasus(),
@@ -45,8 +56,8 @@ def main():
     CNN = cnn.scan(today)
     news_sources.append(CNN)
 
-    ECONOMIST = economist.scan(today)
-    news_sources.append(ECONOMIST)
+    # ECONOMIST = economist.scan(today)
+    # news_sources.append(ECONOMIST)
 
     FOLHA = folha.scan(today, db)
     news_sources.append(FOLHA)
@@ -85,14 +96,12 @@ def main():
                 else:
                     news['status'] = 'translation error'
 
-
-
-# summarize
-    print("SUMMARIZATION:")
     for source in news_sources:
         print("source:", source.source_name)
 
         for news in source.news:
+
+            # summarize
             if news['status'] == 'to be sum':
                 for model in models:
                     try:
@@ -108,6 +117,41 @@ def main():
                     news['summary'] = summary
                     news['status'] = 'success'
                     news[model.model_name] = "success"
+
+            # categorizer
+            if news['status'] == "success":
+
+                for geo in geos:
+                    if geo in news['text']:
+                        news['geo'].append(geo)
+                news['geo'] = set(news['geo'])
+                for company in companies:
+                    if company in news['text']:
+                        news['companies'].append(company)
+                news['companies'] = set(news['companies'])
+                for ref in refs:
+                    if ref in news['text']:
+                        news['keys'].append(ref)
+                news['keys'] = set(news['keys'])
+            # to check qnnty off mentions
+            # from collections import Counter
+            # all_words = Counter([''.join(filter(str.isalpha, x.lower())) for x in news['text'].split() if
+            #                          ''.join(filter(str.isalpha, x.lower()))])
+            # for word, times in all_words.items():
+            #     if word in all_tags:
+            #         if times > 1:
+            #             tags.append(word)
+            # print(tags)
+            # news['tags'] = tags
+
+            # print
+                print("\nsource:", source.source_name)
+                print(news['title'])
+                text_processor.pretty_print(news['summary'])
+                print("geo:", news['geo'])
+                print("companies:", news['companies'])
+                print("keys:", news['keys'])
+                print("url:", news['url'])
 
     # to_save
     dump(news_sources, 'news_sources.joblib')
@@ -137,71 +181,49 @@ def main():
             print("paywall total:", paywall)
             print("sum failed total:", fails)
 
-    # categorizer
-    geos = key_words['geo']
-    companies = key_words['companies']
-    all_tags = geos + companies
-
-    for source in news_sources:
-        for news in source.news:
-            if news['status'] == "success":
-                tags = []  # tags to be saved
-                news['tags'] = tags
-                for tag in all_tags:
-                    if tag in news['text']:
-                        tags.append(tag)
-
-            # to check qnnty off mentions
-            # from collections import Counter
-            # all_words = Counter([''.join(filter(str.isalpha, x.lower())) for x in news['text'].split() if
-            #                          ''.join(filter(str.isalpha, x.lower()))])
-            # for word, times in all_words.items():
-            #     if word in all_tags:
-            #         if times > 1:
-            #             tags.append(word)
-            # print(tags)
-            # news['tags'] = tags
 
 
     # Zero-Shot labeling
-    print("ZERO-SHOT LABELING:")
-    labels = key_words['zero_shots']
+    if zero_shot_analysis == True:
+        print("ZERO-SHOT LABELING:")
+        labels = key_words['zero_shots']
 
-    for source in news_sources:
-        for news in source.news:
-            try:
-                print("\nsource:", source.source_name)
-                print(news['title'])
-                text_processor.pretty_print(news['summary'])
-                print(news['tags'])
-                news['zero_shot'] = zero_shot.zero_shot(news['text'], labels)
-                for shot in news['zero_shot']:
-                    print(shot)
-                print("-----------------------------------\n")
-            except:
-                continue
+        for source in news_sources:
+            for news in source.news:
+                try:
+                    print("\nsource:", source.source_name)
+                    print(news['title'])
+                    text_processor.pretty_print(news['summary'])
+                    print(news['tags'])
+                    news['zero_shot'] = zero_shot.zero_shot(news['text'], labels)
+                    for shot in news['zero_shot']:
+                        print(shot)
+                    print("-----------------------------------\n")
+                except:
+                    continue
 
     # TG post
-    with open('creds.yaml', 'r') as f:
-        config = yaml.safe_load(f)
+    if zero_shot_analysis == True:
+        with open('creds.yaml', 'r') as f:
+            config = yaml.safe_load(f)
 
-    creds = {"chat_id": config['tg']['chat_id'],
-             "token": config['tg']['token']}
-    for source in news_sources:
-        for news in source.news:
-            if news["status"] == 'success':
-                try:
-                    tg_post = tg.format_for_tg(
-                        news['url'],
-                        source.source_name,
-                        news['title'],
-                        news['summary'],
-                        news['tags']
-                    )
-                    tg.send_msg(creds, tg_post)
-                except:
-                    print("failed to post:", news['title'])
+        creds = {"chat_id": config['tg']['chat_id'],
+                 "token": config['tg']['token']}
+        for source in news_sources:
+            for news in source.news:
+                if news["status"] == 'success':
+                    try:
+                        tg_post = tg.format_for_tg(
+                            news['url'],
+                            source.source_name,
+                            news['title'],
+                            news['summary'],
+                            news['tags']
+                        )
+                        tg.send_msg(creds, tg_post)
+                    except:
+                        print("failed to post:", news['title'])
 
-    return news_sources
+        return news_sources
 
 news_sources = main()

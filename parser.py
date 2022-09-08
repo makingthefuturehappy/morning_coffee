@@ -72,7 +72,12 @@ class Content():
                   "url": link,
                   "text": text,
                   "title": title,
-                  "status": None}
+                  "status": None,
+                  "geo": [],
+                  "companies": [],
+                  "keys": []
+                  }
+
           # paywall check
           if len(text) < self.min_text_size:
               self.links_skipped_qnnty += 1

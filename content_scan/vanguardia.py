@@ -30,5 +30,6 @@ def scan(today, db):
       if news['status'] != 'paywall':
           news['status'] = 'translate_from_esp'
 
+  print("useful links qnnty:", vangurdia.links_useful_qnnty)
   print("VANGUARDIA scan is done\n")
   return vangurdia

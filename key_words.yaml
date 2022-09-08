@@ -18,6 +18,15 @@ companies:
  - "Yandex"
  - "Yango"
 
+refs:
+ - "gasoline prices"
+ - "heavy rain"
+ - "public holiday"
+ - "mafia"
+ - 'cartel'
+ - "flood"
+ - "strike"
+
 zero_shots:
  - 'economics'
  - 'crime'
@@ -27,4 +36,4 @@ zero_shots:
  - 'holidays'
  - 'weather'
  - 'transportation'
- - 'gaz prices'
+ - 'gas prices'

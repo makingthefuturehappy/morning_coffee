@@ -19,6 +19,6 @@ def scan(today):
       cnn.links_useful_qnnty = len(cnn.links_useful)
 
   cnn.get_news()
-
+  print("useful links qnnty:", cnn.links_useful_qnnty)
   print("The CNN scan is done\n")
   return cnn
