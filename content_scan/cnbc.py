@@ -21,5 +21,6 @@ def scan(today):
   #     else:
   #       news['status'] = 'paywall'
   #       print('paywall:', news['title'])
+  print("useful links qnnty:", cnbc.links_useful_qnnty)
   print("The CNBC scan is done\n")
   return cnbc

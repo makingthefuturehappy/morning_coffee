@@ -7,6 +7,8 @@ from content_scan import folha as folha
 from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
 from content_scan import financiero as financiero
+from content_scan import laopinion as laopinion
+from content_scan import elheraldo as elheraldo
 
 from summarizer import Philschmid_bart_large_cnn_samsum
 from zero_shot import bart_large_mnli
@@ -24,18 +26,17 @@ def main():
     zero_shot_analysis = False
     tg_post = False
 
-
-    # today = str(date.today().strftime("%Y/%m/%d"))
-    today = "2022/09/08"
+    today = str(date.today().strftime("%Y/%m/%d"))
+    # today = "2022/09/09"
     db = DB("links.txt")
 
     # load key_words
-    with open('key_words.yaml', 'r') as f:
-        key_words = yaml.safe_load(f)
-    geos = key_words['geo']
-    companies = key_words['companies']
-    refs = key_words['refs']
-    all_tags = geos + companies
+    with open('keys/mexico.yaml', 'r') as f:
+        mexico_keys = yaml.safe_load(f)
+    geos = mexico_keys['geo']
+    companies = mexico_keys['companies']
+    refs = mexico_keys['refs']
+    mexico_chat_id = mexico_keys['tg_keys']['chat_id']
 
     models = [
         # Pegasus(),
@@ -49,15 +50,22 @@ def main():
 
     # content parser
     news_sources = []  # to keep news from all web sources
-    #
+    # fail
+    # ELHERALDO = elheraldo.scan(today, db)
+    # news_sources.append(ELHERALDO)
+
+    # fail
+    # ECONOMIST = economist.scan(today)
+    # news_sources.append(ECONOMIST)
+
     CNBC = cnbc.scan(today)
     news_sources.append(CNBC)
 
+    LAOPIMION = laopinion.scan(today)
+    news_sources.append(LAOPIMION)
+
     CNN = cnn.scan(today)
     news_sources.append(CNN)
-
-    # ECONOMIST = economist.scan(today)
-    # news_sources.append(ECONOMIST)
 
     FOLHA = folha.scan(today, db)
     news_sources.append(FOLHA)
@@ -82,12 +90,12 @@ def main():
     # translate
     print("translating from spanish to english...")
     for source in news_sources:
-        print("source:", source.source_name)
+        # print("source:", source.source_name)
         for news in source.news:
             if news['status'] == 'translate_from_esp':
-                print("title esp:", news['title'])
+                # print("title esp:", news['title'])
                 news['title'] = translate.translate(news['title'])
-                print("title eng:", news['title'], "\n")
+                # print("title eng:", news['title'], "\n")
 
                 traslated_text = translate.translate(news['text'])
                 if traslated_text != "translation error":
@@ -96,6 +104,7 @@ def main():
                 else:
                     news['status'] = 'translation error'
 
+    # to process news
     for source in news_sources:
         print("source:", source.source_name)
 
@@ -131,27 +140,51 @@ def main():
                 news['companies'] = set(news['companies'])
                 for ref in refs:
                     if ref in news['text']:
-                        news['keys'].append(ref)
-                news['keys'] = set(news['keys'])
-            # to check qnnty off mentions
-            # from collections import Counter
-            # all_words = Counter([''.join(filter(str.isalpha, x.lower())) for x in news['text'].split() if
-            #                          ''.join(filter(str.isalpha, x.lower()))])
-            # for word, times in all_words.items():
-            #     if word in all_tags:
-            #         if times > 1:
-            #             tags.append(word)
-            # print(tags)
-            # news['tags'] = tags
+                        news['refs'].append(ref)
+                news['refs'] = set(news['refs'])
 
-            # print
+                # rating
+                # mexico channel
+                rating = 0
+                rating += len(news['companies']) if bool(news['companies']) else 0
+
+                if len(news['refs']) > 0 and len(news['geo']) > 0:
+                    rating += len(news['refs'])
+                    news['rating'].update({mexico_chat_id: rating})
+
+                # display content
                 print("\nsource:", source.source_name)
                 print(news['title'])
                 text_processor.pretty_print(news['summary'])
                 print("geo:", news['geo'])
                 print("companies:", news['companies'])
-                print("keys:", news['keys'])
+                print("refs:", news['refs'])
+                print("rating:", news['rating'])
                 print("url:", news['url'])
+
+
+    # select the important
+    print("\nTO SEND")
+    to_send = []
+    for source in news_sources:
+        for news in source.news:
+            if news['status'] == "success":
+                try:
+                    if news['rating'][mexico_chat_id] != 0:
+                        to_send.append(news)
+                except:
+                    continue
+    # dispay the important
+    for news in to_send:
+        print(news['title'])
+        text_processor.pretty_print(news['summary'])
+        print("geo:", news['geo'])
+        print("companies:", news['companies'])
+        print("refs:", news['refs'])
+        print("rating:", news['rating'])
+        print("url:", news['url'])
+
+
 
     # to_save
     dump(news_sources, 'news_sources.joblib')
@@ -186,7 +219,7 @@ def main():
     # Zero-Shot labeling
     if zero_shot_analysis == True:
         print("ZERO-SHOT LABELING:")
-        labels = key_words['zero_shots']
+        labels = mexico_keys['zero_shots']
 
         for source in news_sources:
             for news in source.news:

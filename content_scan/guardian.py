@@ -42,6 +42,8 @@ def scan(today):
     guardian.links_useful_qnnty = len(guardian.links_useful)
 
     guardian.get_news()
+
+    print("useful links qnnty:", guardian.links_useful_qnnty)
     print("The REUTERS scan is done\n")
 
     return guardian

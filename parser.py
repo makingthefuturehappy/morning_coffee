@@ -57,7 +57,7 @@ class Content():
       try:
           title = content.find("h1").text
       except:
-          title = "No Title"
+          title = "Can't get title by <h1>"
       content = content.find_all("p")
       text = ""
       for item in content:
@@ -75,7 +75,8 @@ class Content():
                   "status": None,
                   "geo": [],
                   "companies": [],
-                  "keys": []
+                  "refs": [],
+                  "rating": {} # "chat_id": "index priority"
                   }
 
           # paywall check

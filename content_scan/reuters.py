@@ -15,6 +15,7 @@ def scan(today):
       reuters.links_useful_qnnty = len(reuters.links_useful)
 
   reuters.get_news()
+  print("useful links qnnty:", reuters.links_useful_qnnty)
   print("The REUTERS scan is done\n")
 
   return reuters

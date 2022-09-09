@@ -24,5 +24,6 @@ def scan(today):
   #     else:
   #       news['status'] = 'paywall'
   #       print('paywall:', news['title'])
+  print("useful links qnnty:", financiero.links_useful_qnnty)
   print("El Financiero scan is done\n")
   return financiero

@@ -19,6 +19,6 @@ def scan(today, db):
   folha.links_useful_qnnty = len(folha.links_useful)
 
   folha.get_news()
-
+  print("useful links qnnty:", folha.links_useful_qnnty)
   print("FOLHA scan is done\n")
   return folha
