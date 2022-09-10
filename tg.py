@@ -37,5 +37,5 @@ def send_msg(creds,  # chat, bot credentials
             "&text=" + text + \
             "&parse_mode=HTML" + \
             "&disable_web_page_preview=True"
-  results = requests.get(url_req)
+  requests.get(url_req)
   return

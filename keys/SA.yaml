@@ -1,12 +1,19 @@
 # https://1cloud.ru/blog/yaml_for_beginners
 ---
 tg_keys:
- "chat_id": "-1001559306561"
+ "chat_id": "-1001760351214"
  "token": "5433315725:AAEIyq5r-Zn-XtQjaWgWeHtrQ8XDHiRQ0mk"
- "name": "Mexico"
+ "name": "SA"
 
 geo:
- - "Mexico"
+ - "Colombia"
+ - "Peru"
+ - "Chile"
+ - "Bolivia"
+ - "Argentina"
+ - "Uruguay"
+ - "Paraguay"
+ - "Ecuador"
 
 companies:
  - "Uber"
@@ -26,7 +33,6 @@ refs:
  - "hurricane"
  - "Hurricane"
  - "flood"
- - "taxi"
  - "strike"
 
 zero_shots:

@@ -10,6 +10,8 @@ from content_scan import financiero as financiero
 from content_scan import laopinion as laopinion
 from content_scan import elheraldo as elheraldo
 
+from channel import Channel
+
 from summarizer import Philschmid_bart_large_cnn_samsum
 from zero_shot import bart_large_mnli
 
@@ -24,20 +26,34 @@ import yaml
 def main():
 
     zero_shot_analysis = False
-    tg_post = False
+    tg_post = True
 
-    today = str(date.today().strftime("%Y/%m/%d"))
-    # today = "2022/09/09"
+    # today = str(date.today().strftime("%Y/%m/%d"))
+    today = "2022/09/09"
     db = DB("links.txt")
 
-    # load key_words
-    with open('keys/mexico.yaml', 'r') as f:
-        mexico_keys = yaml.safe_load(f)
-    geos = mexico_keys['geo']
-    companies = mexico_keys['companies']
-    refs = mexico_keys['refs']
-    mexico_chat_id = mexico_keys['tg_keys']['chat_id']
+    # load channel settings
+    channel_mexico = Channel('keys/mexico.yaml')
+    channel_SA = Channel('keys/SA.yaml')
+    channels = [
+        channel_mexico,
+        channel_SA
+    ]
 
+    # load all key_words, refs, company_names etc
+    geos = []
+    companies = []
+    refs = []
+
+    for channel in channels:
+        for geo in channel.geos:
+            geos.append(geo)
+        for company in channel.companies:
+            geos.append(company)
+        for ref in channel.companies:
+            refs.append(ref)
+
+    # load NN models
     models = [
         # Pegasus(),
         # Facebook_bart_large_cnn(),
@@ -46,7 +62,7 @@ def main():
         # Small2bert_cnn_daily_mail(),
     ]
 
-    zero_shot = bart_large_mnli()
+    # zero_shot = bart_large_mnli()
 
     # content parser
     news_sources = []  # to keep news from all web sources
@@ -57,169 +73,165 @@ def main():
     # fail
     # ECONOMIST = economist.scan(today)
     # news_sources.append(ECONOMIST)
+# -----------------------------------------------
 
-    CNBC = cnbc.scan(today)
-    news_sources.append(CNBC)
+    # # load sources
+    # CNBC = cnbc.scan(today)
+    # news_sources.append(CNBC)
+    #
+    # LAOPIMION = laopinion.scan(today)
+    # news_sources.append(LAOPIMION)
+    #
+    # CNN = cnn.scan(today)
+    # news_sources.append(CNN)
+    #
+    # FOLHA = folha.scan(today, db)
+    # news_sources.append(FOLHA)
+    #
+    # GUARDIAN = guardian.scan(today)
+    # news_sources.append(GUARDIAN)
+    #
+    # LATIMES = latimes.scan(today)
+    # news_sources.append(LATIMES)
+    #
+    # REUTERS = reuters.scan(today)
+    # news_sources.append(REUTERS)
+    #
+    # VANGUARDIA = vangurdia.scan(today,db)
+    # news_sources.append(VANGUARDIA)
+    #
+    # FINANCIERO = financiero.scan(today)
+    # news_sources.append(FINANCIERO)
+    #
+    # print("news load is done\n")
+    #
+    # # translate
+    # print("translating from spanish to english...")
+    # for source in news_sources:
+    #     # print("source:", source.source_name)
+    #     for news in source.news:
+    #         if news['status'] == 'translate_from_esp':
+    #             # print("title esp:", news['title'])
+    #             news['title'] = translate.translate(news['title'])
+    #             # print("title eng:", news['title'], "\n")
+    #
+    #             traslated_text = translate.translate(news['text'])
+    #             if traslated_text != "translation error":
+    #                 news['text'] = traslated_text
+    #                 news['status'] = "to be sum"
+    #             else:
+    #                 news['status'] = 'translation error'
+    #
+    # # to process news
+    # for source in news_sources:
+    #     print("source:", source.source_name)
+    #
+    #     for news in source.news:
+    #
+    #         # summarize
+    #         if news['status'] == 'to be sum':
+    #             for model in models:
+    #                 try:
+    #                     summary = model.summarize(news['text'])
+    #                 except:
+    #                     print(model.model_name)
+    #                     print("some error happened\n")
+    #                     news[model.model_name] = "fail"
+    #                     news['status'] = 'model failed'
+    #                     continue
+    #
+    #                 summary = text_processor.clean_text(summary)
+    #                 news['summary'] = summary
+    #                 news['status'] = 'success'
+    #                 news[model.model_name] = "success"
 
-    LAOPIMION = laopinion.scan(today)
-    news_sources.append(LAOPIMION)
+    # to_save
+    # dump(news_sources, 'news_sources.joblib')
+    news_sources = load('news_sources.joblib')
 
-    CNN = cnn.scan(today)
-    news_sources.append(CNN)
+    # Tagging
+    from tags import tags
+    import news_ratings as rating
 
-    FOLHA = folha.scan(today, db)
-    news_sources.append(FOLHA)
+    news_sources[0].news[2]['text'] = "123 Uber Colombia cartel"
+    news_sources[0].news[2]['summary'] = "123 Uber Colombia cartel"
 
-    GUARDIAN = guardian.scan(today)
-    news_sources.append(GUARDIAN)
+    for channel in channels:
+        for source in news_sources:
+            tags(source.news, channel)
 
-    LATIMES = latimes.scan(today)
-    news_sources.append(LATIMES)
+            # news rating
+            rating.mexico(source.news, channel)
+            rating.SA(source.news, channel)
 
-    REUTERS = reuters.scan(today)
-    news_sources.append(REUTERS)
-
-    VANGUARDIA = vangurdia.scan(today,db)
-    news_sources.append(VANGUARDIA)
-
-    FINANCIERO = financiero.scan(today)
-    news_sources.append(FINANCIERO)
-
-    print("news load is done\n")
-
-    # translate
-    print("translating from spanish to english...")
-    for source in news_sources:
-        # print("source:", source.source_name)
-        for news in source.news:
-            if news['status'] == 'translate_from_esp':
-                # print("title esp:", news['title'])
-                news['title'] = translate.translate(news['title'])
-                # print("title eng:", news['title'], "\n")
-
-                traslated_text = translate.translate(news['text'])
-                if traslated_text != "translation error":
-                    news['text'] = traslated_text
-                    news['status'] = "to be sum"
-                else:
-                    news['status'] = 'translation error'
-
-    # to process news
-    for source in news_sources:
-        print("source:", source.source_name)
-
-        for news in source.news:
-
-            # summarize
-            if news['status'] == 'to be sum':
-                for model in models:
-                    try:
-                        summary = model.summarize(news['text'])
-                    except:
-                        print(model.model_name)
-                        print("some error happened\n")
-                        news[model.model_name] = "fail"
-                        news['status'] = 'model failed'
-                        continue
-
-                    summary = text_processor.clean_text(summary)
-                    news['summary'] = summary
-                    news['status'] = 'success'
-                    news[model.model_name] = "success"
-
-            # categorizer
-            if news['status'] == "success":
-
-                for geo in geos:
-                    if geo in news['text']:
-                        news['geo'].append(geo)
-                news['geo'] = set(news['geo'])
-                for company in companies:
-                    if company in news['text']:
-                        news['companies'].append(company)
-                news['companies'] = set(news['companies'])
-                for ref in refs:
-                    if ref in news['text']:
-                        news['refs'].append(ref)
-                news['refs'] = set(news['refs'])
-
-                # rating
-                # mexico channel
-                rating = 0
-                rating += len(news['companies']) if bool(news['companies']) else 0
-
-                if len(news['refs']) > 0 and len(news['geo']) > 0:
-                    rating += len(news['refs'])
-                    news['rating'].update({mexico_chat_id: rating})
-
-                # display content
-                print("\nsource:", source.source_name)
-                print(news['title'])
-                text_processor.pretty_print(news['summary'])
-                print("geo:", news['geo'])
-                print("companies:", news['companies'])
-                print("refs:", news['refs'])
-                print("rating:", news['rating'])
-                print("url:", news['url'])
-
+            # display content
+            for news in source.news:
+                if news['status'] == 'success':
+                    print("\nchannel:", channel.name)
+                    print("source:", source.source_name)
+                    print(news['title'])
+                    text_processor.pretty_print(news['summary'])
+                    print("geo:", news['geo'])
+                    print("companies:", news['companies'])
+                    print("refs:", news['refs'])
+                    print("rating:", news['rating'])
+                    print("url:", news['url'])
 
     # select the important
     print("\nTO SEND")
-    to_send = []
-    for source in news_sources:
-        for news in source.news:
-            if news['status'] == "success":
-                try:
-                    if news['rating'][mexico_chat_id] != 0:
-                        to_send.append(news)
-                except:
-                    continue
+    for channel in channels:
+        to_send = []
+        for source in news_sources:
+            for news in source.news:
+                if news['status'] == "success":
+                    try:
+                        if news['rating'][channel.chat_id] != 0:
+                            to_send.append(news)
+                    except:
+                        continue
+
+
     # dispay the important
-    for news in to_send:
-        print(news['title'])
-        text_processor.pretty_print(news['summary'])
-        print("geo:", news['geo'])
-        print("companies:", news['companies'])
-        print("refs:", news['refs'])
-        print("rating:", news['rating'])
-        print("url:", news['url'])
-
-
-
-    # to_save
-    dump(news_sources, 'news_sources.joblib')
-    # news_sources = load('news_sources.joblib')
-
+    for channel in channels:
+        print("\nchannel:", channel.name)
+        for news in to_send:
+            print(news['title'])
+            text_processor.pretty_print(news['summary'])
+            print("geo:", news['geo'])
+            print("companies:", news['companies'])
+            print("refs:", news['refs'])
+            print("rating:", news['rating'])
+            print("url:", news['url'])
 
     # print statistics
-    print("summarization result:")
-    for source in news_sources:
-        print("source:", source.source_name)
-        print("links_all   :", len(source.links_all))
-        print("useful      :", len(source.links_useful))
-        for model in models:
-            print("\n", model.model_name)
-            fails = 0
-            success = 0
-            paywall = 0
-            for news in source.news:
-                if news["status"] == "fail":
-                    fails += 1
-                elif news["status"] == "success":
-                    success += 1
-                else:
-                    news["status"] == "paywall"
-                    paywall += 1
-            print("success total:", success)
-            print("paywall total:", paywall)
-            print("sum failed total:", fails)
+    # print("summarization result:")
+    # for source in news_sources:
+    #     print("source:", source.source_name)
+    #     print("links_all   :", len(source.links_all))
+    #     print("useful      :", len(source.links_useful))
+    #     for model in models:
+    #         print("\n", model.model_name)
+    #         fails = 0
+    #         success = 0
+    #         paywall = 0
+    #         for news in source.news:
+    #             if news["status"] == "fail":
+    #                 fails += 1
+    #             elif news["status"] == "success":
+    #                 success += 1
+    #             else:
+    #                 news["status"] == "paywall"
+    #                 paywall += 1
+    #         print("success total:", success)
+    #         print("paywall total:", paywall)
+    #         print("sum failed total:", fails)
 
 
 
     # Zero-Shot labeling
     if zero_shot_analysis == True:
         print("ZERO-SHOT LABELING:")
-        labels = mexico_keys['zero_shots']
+        labels = channel_mexico.chat_id['zero_shots']
 
         for source in news_sources:
             for news in source.news:
@@ -236,22 +248,22 @@ def main():
                     continue
 
     # TG post
-    if zero_shot_analysis == True:
-        with open('creds.yaml', 'r') as f:
-            config = yaml.safe_load(f)
+    if tg_post == True:
 
-        creds = {"chat_id": config['tg']['chat_id'],
-                 "token": config['tg']['token']}
-        for source in news_sources:
-            for news in source.news:
-                if news["status"] == 'success':
+        for channel in channels:
+            creds = {"chat_id": channel.chat_id,
+                     "token": channel.token}
+            for news in to_send:
+                if channel.chat_id in list(news['rating'].keys()):
                     try:
                         tg_post = tg.format_for_tg(
                             news['url'],
-                            source.source_name,
+                            # source.source_name,
+                            "TEST",
                             news['title'],
                             news['summary'],
-                            news['tags']
+                            # news['tags']
+                            "tags"
                         )
                         tg.send_msg(creds, tg_post)
                     except:
