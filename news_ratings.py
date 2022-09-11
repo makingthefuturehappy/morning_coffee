@@ -11,7 +11,8 @@ def mexico(all_news, channel):
                 if len(set(channel.refs) & set(news['refs'])) > 0:
                     rating += len(news['refs'])
 
-            news['rating'].update({channel.chat_id: rating})
+            if rating != 0:
+                news['rating'].update({channel.chat_id: rating})
             return
 
 def SA(all_news, channel):
@@ -25,5 +26,6 @@ def SA(all_news, channel):
                 if len(set(channel.refs) & set(news['refs'])) > 0:
                     rating += len(news['refs'])
 
-            news['rating'].update({channel.chat_id: rating})
+            if rating != 0:
+                news['rating'].update({channel.chat_id: rating})
             return

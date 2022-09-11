@@ -13,13 +13,14 @@ from content_scan import elheraldo as elheraldo
 from channel import Channel
 
 from summarizer import Philschmid_bart_large_cnn_samsum
-from zero_shot import bart_large_mnli
+# from zero_shot import bart_large_mnli
+import translate as translate
 
 from joblib import dump, load
 from datetime import date
 from db import DB
 import text_processor
-import translate as translate
+
 import tg
 import yaml
 
@@ -28,8 +29,8 @@ def main():
     zero_shot_analysis = False
     tg_post = True
 
-    # today = str(date.today().strftime("%Y/%m/%d"))
-    today = "2022/09/09"
+    today = str(date.today().strftime("%Y/%m/%d"))
+    # today = "2022/09/09"
     db = DB("links.txt")
 
     # load channel settings
@@ -66,6 +67,7 @@ def main():
 
     # content parser
     news_sources = []  # to keep news from all web sources
+
     # fail
     # ELHERALDO = elheraldo.scan(today, db)
     # news_sources.append(ELHERALDO)
@@ -75,86 +77,91 @@ def main():
     # news_sources.append(ECONOMIST)
 # -----------------------------------------------
 
-    # # load sources
-    # CNBC = cnbc.scan(today)
-    # news_sources.append(CNBC)
-    #
-    # LAOPIMION = laopinion.scan(today)
-    # news_sources.append(LAOPIMION)
-    #
-    # CNN = cnn.scan(today)
-    # news_sources.append(CNN)
-    #
-    # FOLHA = folha.scan(today, db)
-    # news_sources.append(FOLHA)
-    #
-    # GUARDIAN = guardian.scan(today)
-    # news_sources.append(GUARDIAN)
-    #
-    # LATIMES = latimes.scan(today)
-    # news_sources.append(LATIMES)
-    #
-    # REUTERS = reuters.scan(today)
-    # news_sources.append(REUTERS)
-    #
-    # VANGUARDIA = vangurdia.scan(today,db)
-    # news_sources.append(VANGUARDIA)
-    #
-    # FINANCIERO = financiero.scan(today)
-    # news_sources.append(FINANCIERO)
-    #
-    # print("news load is done\n")
-    #
-    # # translate
-    # print("translating from spanish to english...")
-    # for source in news_sources:
-    #     # print("source:", source.source_name)
-    #     for news in source.news:
-    #         if news['status'] == 'translate_from_esp':
-    #             # print("title esp:", news['title'])
-    #             news['title'] = translate.translate(news['title'])
-    #             # print("title eng:", news['title'], "\n")
-    #
-    #             traslated_text = translate.translate(news['text'])
-    #             if traslated_text != "translation error":
-    #                 news['text'] = traslated_text
-    #                 news['status'] = "to be sum"
-    #             else:
-    #                 news['status'] = 'translation error'
-    #
-    # # to process news
-    # for source in news_sources:
-    #     print("source:", source.source_name)
-    #
-    #     for news in source.news:
-    #
-    #         # summarize
-    #         if news['status'] == 'to be sum':
-    #             for model in models:
-    #                 try:
-    #                     summary = model.summarize(news['text'])
-    #                 except:
-    #                     print(model.model_name)
-    #                     print("some error happened\n")
-    #                     news[model.model_name] = "fail"
-    #                     news['status'] = 'model failed'
-    #                     continue
-    #
-    #                 summary = text_processor.clean_text(summary)
-    #                 news['summary'] = summary
-    #                 news['status'] = 'success'
-    #                 news[model.model_name] = "success"
+    # load sources
+    CNBC = cnbc.scan(today)
+    news_sources.append(CNBC)
+
+    LAOPIMION = laopinion.scan(today)
+    news_sources.append(LAOPIMION)
+
+    CNN = cnn.scan(today)
+    news_sources.append(CNN)
+
+    FOLHA = folha.scan(today, db)
+    news_sources.append(FOLHA)
+
+    GUARDIAN = guardian.scan(today)
+    news_sources.append(GUARDIAN)
+
+    LATIMES = latimes.scan(today)
+    news_sources.append(LATIMES)
+
+    REUTERS = reuters.scan(today)
+    news_sources.append(REUTERS)
+
+    VANGUARDIA = vangurdia.scan(today,db)
+    news_sources.append(VANGUARDIA)
+
+    FINANCIERO = financiero.scan(today)
+    news_sources.append(FINANCIERO)
+
+    print("news load is done\n")
+
+    # translate
+    print("translating from spanish to english...")
+    for source in news_sources:
+        # print("source:", source.source_name)
+        for news in source.news:
+            if news['status'] == 'translate_from_esp':
+                # print("title esp:", news['title'])
+                news['title'] = translate.translate(news['title'])
+                # print("title eng:", news['title'], "\n")
+
+                traslated_text = translate.translate(news['text'])
+                if traslated_text != "translation error":
+                    news['text'] = traslated_text
+                    news['status'] = "to be sum"
+                else:
+                    news['status'] = 'translation error'
+
+    # to process news
+    for source in news_sources:
+        print("source:", source.source_name)
+
+        for news in source.news:
+
+            # summarize
+            if news['status'] == 'to be sum':
+                for model in models:
+                    try:
+                        summary = model.summarize(news['text'])
+                    except:
+                        print(model.model_name)
+                        print("some error happened\n")
+                        news[model.model_name] = "fail"
+                        news['status'] = 'model failed'
+                        continue
+
+                    summary = text_processor.clean_text(summary)
+                    news['summary'] = summary
+                    news['status'] = 'success'
+                    news[model.model_name] = "success"
 
     # to_save
-    # dump(news_sources, 'news_sources.joblib')
-    news_sources = load('news_sources.joblib')
+    dump(news_sources, 'news_sources.joblib')
+    # news_sources = load('news_sources.joblib')
 
     # Tagging
     from tags import tags
     import news_ratings as rating
 
-    news_sources[0].news[2]['text'] = "123 Uber Colombia cartel"
-    news_sources[0].news[2]['summary'] = "123 Uber Colombia cartel"
+    news_sources[0].news[0]['text'] = "Uber 123"
+    news_sources[0].news[0]['title'] = "for MEXICO and COLOMBIA"
+    news_sources[0].news[0]['summary'] = "Uber 123"
+
+    news_sources[5].news[0]['text'] = "cartel Colombia"
+    news_sources[5].news[0]['title'] = "only for Colombia"
+    news_sources[5].news[0]['summary'] = "cartel Colombia"
 
     for channel in channels:
         for source in news_sources:
@@ -251,23 +258,22 @@ def main():
     if tg_post == True:
 
         for channel in channels:
+            print("\nsent to channel:", channel.name)
             creds = {"chat_id": channel.chat_id,
                      "token": channel.token}
             for news in to_send:
                 if channel.chat_id in list(news['rating'].keys()):
-                    try:
-                        tg_post = tg.format_for_tg(
-                            news['url'],
-                            # source.source_name,
-                            "TEST",
-                            news['title'],
-                            news['summary'],
-                            # news['tags']
-                            "tags"
-                        )
-                        tg.send_msg(creds, tg_post)
-                    except:
-                        print("failed to post:", news['title'])
+                    # try:
+                    tg_post = tg.format_for_tg(
+                        news['url'],
+                        news['source'],
+                        news['title'],
+                        news['summary'],
+                        news['tags'][channel.chat_id]
+                    )
+                    tg.send_msg(creds, tg_post)
+                    # except:
+                    #     print("failed to post news:", news['title'])
 
         return news_sources
 

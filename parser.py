@@ -18,7 +18,7 @@ class Content():
 
       # initial setup
       self.news = []  # list of dicts with news
-      self.main_page = self.get_html(url, save_file=True)
+      self.main_page = self.get_html(url, save_file=False)
       self.links_all = self.get_links(self.main_page)
       self.links_all_qnnty = len(self.links_all)
       print("total links (all types):", self.links_all_qnnty)
@@ -71,6 +71,7 @@ class Content():
           news = {"date": self.date,
                   "url": link,
                   "text": text,
+                  "source": self.source_name,
                   "title": title,
                   "status": None,
                   "geo": [],
