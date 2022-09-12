@@ -1,3 +1,5 @@
+from datetime import date
+
 class DB():
   def __init__(self, file_path):
     self.file_path = file_path
@@ -23,10 +25,15 @@ class DB():
       return new_links
 
   def save_new_links(self, new_links:list):
-    with open(self.file_path, "a") as file:
-        for link in new_links:
-          file.write(link + '\n')
-    print("links are saved to", self.file_path)
+    if len(new_links) != 0
+      with open(self.file_path, "a") as file:
+
+          time_stamp = str(date.today().strftime("%Y/%m/%d"))
+          file.write(time_stamp + '\n')
+
+          for link in new_links:
+            file.write(link + '\n')
+      print("links are saved to", self.file_path)
     return
 
   def refresh_db(self, new_links):

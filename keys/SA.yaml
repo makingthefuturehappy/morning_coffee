@@ -34,6 +34,8 @@ refs:
  - "Hurricane"
  - "flood"
  - "strike"
+ - "Transport"
+ - "marathon"
 
 zero_shots:
  - 'economics'

@@ -8,6 +8,7 @@ from content_scan import cnbc as cnbc
 from content_scan import latimes as latimes
 from content_scan import financiero as financiero
 from content_scan import laopinion as laopinion
+from content_scan import buenosaires as bsas
 from content_scan import elheraldo as elheraldo
 
 from channel import Channel
@@ -78,6 +79,10 @@ def main():
 # -----------------------------------------------
 
     # load sources
+
+    BSAS = bsas.scan(today, db)
+    news_sources.append(BSAS)
+
     CNBC = cnbc.scan(today)
     news_sources.append(CNBC)
 
@@ -110,7 +115,7 @@ def main():
     # translate
     print("translating from spanish to english...")
     for source in news_sources:
-        # print("source:", source.source_name)
+        print("source:", source.source_name)
         for news in source.news:
             if news['status'] == 'translate_from_esp':
                 # print("title esp:", news['title'])
@@ -154,14 +159,6 @@ def main():
     # Tagging
     from tags import tags
     import news_ratings as rating
-
-    news_sources[0].news[0]['text'] = "Uber 123"
-    news_sources[0].news[0]['title'] = "for MEXICO and COLOMBIA"
-    news_sources[0].news[0]['summary'] = "Uber 123"
-
-    news_sources[5].news[0]['text'] = "cartel Colombia"
-    news_sources[5].news[0]['title'] = "only for Colombia"
-    news_sources[5].news[0]['summary'] = "cartel Colombia"
 
     for channel in channels:
         for source in news_sources:
