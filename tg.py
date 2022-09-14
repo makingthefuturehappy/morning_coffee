@@ -14,7 +14,7 @@ def translate(text, src='en', dest='ru'):
 
 def format_for_tg(url, source_name, title, text, hashtags=[]):
   url = url.replace("https://", "")
-  formatted_text = "\n" + "<b>" + "<a href =" + "'" + url + "'" + ">" + source_name + ":</a> " + title + "</b>" + "\n\n"
+  formatted_text = "\n" + "<b>" + "<a href =" + "'" + url + "'" + ">" + source_name + ":</a> " + title + "</b>"+"\n\n"
 
   text = text.split('. ')
 
@@ -22,7 +22,7 @@ def format_for_tg(url, source_name, title, text, hashtags=[]):
     sentence = "- " + sentence + "\n\n"
     formatted_text += sentence
 
-  hasgtag_line = " "
+  hasgtag_line = ""
   for hashtag in hashtags:
     hashtag = "%23" + hashtag + " "  # %23 is a hashtag symbol
     hasgtag_line += hashtag

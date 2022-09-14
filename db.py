@@ -25,7 +25,7 @@ class DB():
       return new_links
 
   def save_new_links(self, new_links:list):
-    if len(new_links) != 0
+    if len(new_links) != 0:
       with open(self.file_path, "a") as file:
 
           time_stamp = str(date.today().strftime("%Y/%m/%d"))

@@ -30,6 +30,7 @@ refs:
  - "strike"
  - "Transport"
  - "marathon"
+ - "shooting"
 
 zero_shots:
  - 'economics'

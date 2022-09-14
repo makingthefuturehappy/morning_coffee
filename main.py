@@ -29,6 +29,7 @@ def main():
 
     zero_shot_analysis = False
     tg_post = True
+    emulate = True
 
     today = str(date.today().strftime("%Y/%m/%d"))
     # today = "2022/09/09"
@@ -55,106 +56,110 @@ def main():
         for ref in channel.companies:
             refs.append(ref)
 
-    # load NN models
-    models = [
-        # Pegasus(),
-        # Facebook_bart_large_cnn(),
-        Philschmid_bart_large_cnn_samsum(),
-        # MT5_multilingual_XLSum(),
-        # Small2bert_cnn_daily_mail(),
-    ]
+    if emulate == False:
 
-    # zero_shot = bart_large_mnli()
+        # load NN models
+        models = [
+            # Pegasus(),
+            # Facebook_bart_large_cnn(),
+            Philschmid_bart_large_cnn_samsum(),
+            # MT5_multilingual_XLSum(),
+            # Small2bert_cnn_daily_mail(),
+        ]
 
-    # content parser
-    news_sources = []  # to keep news from all web sources
+        # zero_shot = bart_large_mnli()
 
-    # fail
-    # ELHERALDO = elheraldo.scan(today, db)
-    # news_sources.append(ELHERALDO)
+        # content parser
+        news_sources = []  # to keep news from all web sources
 
-    # fail
-    # ECONOMIST = economist.scan(today)
-    # news_sources.append(ECONOMIST)
-# -----------------------------------------------
+        # fail
+        # ELHERALDO = elheraldo.scan(today, db)
+        # news_sources.append(ELHERALDO)
 
-    # load sources
+        # fail
+        # ECONOMIST = economist.scan(today)
+        # news_sources.append(ECONOMIST)
+    # -----------------------------------------------
 
-    BSAS = bsas.scan(today, db)
-    news_sources.append(BSAS)
+        # load sources
 
-    CNBC = cnbc.scan(today)
-    news_sources.append(CNBC)
+        BSAS = bsas.scan(today, db)
+        news_sources.append(BSAS)
 
-    LAOPIMION = laopinion.scan(today)
-    news_sources.append(LAOPIMION)
+        CNBC = cnbc.scan(today)
+        news_sources.append(CNBC)
 
-    CNN = cnn.scan(today)
-    news_sources.append(CNN)
+        LAOPIMION = laopinion.scan(today)
+        news_sources.append(LAOPIMION)
 
-    FOLHA = folha.scan(today, db)
-    news_sources.append(FOLHA)
+        CNN = cnn.scan(today)
+        news_sources.append(CNN)
 
-    GUARDIAN = guardian.scan(today)
-    news_sources.append(GUARDIAN)
+        FOLHA = folha.scan(today, db)
+        news_sources.append(FOLHA)
 
-    LATIMES = latimes.scan(today)
-    news_sources.append(LATIMES)
+        GUARDIAN = guardian.scan(today)
+        news_sources.append(GUARDIAN)
 
-    REUTERS = reuters.scan(today)
-    news_sources.append(REUTERS)
+        LATIMES = latimes.scan(today)
+        news_sources.append(LATIMES)
 
-    VANGUARDIA = vangurdia.scan(today,db)
-    news_sources.append(VANGUARDIA)
+        REUTERS = reuters.scan(today)
+        news_sources.append(REUTERS)
 
-    FINANCIERO = financiero.scan(today)
-    news_sources.append(FINANCIERO)
+        VANGUARDIA = vangurdia.scan(today,db)
+        news_sources.append(VANGUARDIA)
 
-    print("news load is done\n")
+        FINANCIERO = financiero.scan(today)
+        news_sources.append(FINANCIERO)
 
-    # translate
-    print("translating from spanish to english...")
-    for source in news_sources:
-        print("source:", source.source_name)
-        for news in source.news:
-            if news['status'] == 'translate_from_esp':
-                # print("title esp:", news['title'])
-                news['title'] = translate.translate(news['title'])
-                # print("title eng:", news['title'], "\n")
+        print("news load is done\n")
 
-                traslated_text = translate.translate(news['text'])
-                if traslated_text != "translation error":
-                    news['text'] = traslated_text
-                    news['status'] = "to be sum"
-                else:
-                    news['status'] = 'translation error'
+        # translate
+        print("translating from spanish to english...")
+        for source in news_sources:
+            print("source:", source.source_name)
+            for news in source.news:
+                if news['status'] == 'translate_from_esp':
+                    # print("title esp:", news['title'])
+                    news['title'] = translate.translate(news['title'])
+                    # print("title eng:", news['title'], "\n")
 
-    # to process news
-    for source in news_sources:
-        print("source:", source.source_name)
+                    traslated_text = translate.translate(news['text'])
+                    if traslated_text != "translation error":
+                        news['text'] = traslated_text
+                        news['status'] = "to be sum"
+                    else:
+                        news['status'] = 'translation error'
 
-        for news in source.news:
+        # to process news
+        for source in news_sources:
+            print("source:", source.source_name)
 
-            # summarize
-            if news['status'] == 'to be sum':
-                for model in models:
-                    try:
-                        summary = model.summarize(news['text'])
-                    except:
-                        print(model.model_name)
-                        print("some error happened\n")
-                        news[model.model_name] = "fail"
-                        news['status'] = 'model failed'
-                        continue
+            for news in source.news:
 
-                    summary = text_processor.clean_text(summary)
-                    news['summary'] = summary
-                    news['status'] = 'success'
-                    news[model.model_name] = "success"
+                # summarize
+                if news['status'] == 'to be sum':
+                    for model in models:
+                        try:
+                            summary = model.summarize(news['text'])
+                        except:
+                            print(model.model_name)
+                            print("some error happened\n")
+                            news[model.model_name] = "fail"
+                            news['status'] = 'model failed'
+                            continue
 
-    # to_save
-    dump(news_sources, 'news_sources.joblib')
-    # news_sources = load('news_sources.joblib')
+                        summary = text_processor.clean_text(summary)
+                        news['summary'] = summary
+                        news['status'] = 'success'
+                        news[model.model_name] = "success"
+
+        # to_save
+        dump(news_sources, 'news_sources.joblib')
+
+    if emulate == True:
+        news_sources = load('news_sources.joblib')
 
     # Tagging
     from tags import tags

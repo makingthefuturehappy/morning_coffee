@@ -13,7 +13,7 @@ def mexico(all_news, channel):
 
             if rating != 0:
                 news['rating'].update({channel.chat_id: rating})
-            return
+    return
 
 def SA(all_news, channel):
     for news in all_news:
@@ -28,4 +28,4 @@ def SA(all_news, channel):
 
             if rating != 0:
                 news['rating'].update({channel.chat_id: rating})
-            return
+    return
