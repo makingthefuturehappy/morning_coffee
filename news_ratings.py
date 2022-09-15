@@ -29,3 +29,10 @@ def SA(all_news, channel):
             if rating != 0:
                 news['rating'].update({channel.chat_id: rating})
     return
+
+def all_news(all_news, channel):
+    for news in all_news:
+        if news['status'] == 'success':
+            rating = 100000
+            news['rating'].update({channel.chat_id: rating})
+    return

@@ -1,0 +1,44 @@
+# https://1cloud.ru/blog/yaml_for_beginners
+---
+tg_keys:
+ "chat_id": "-1001580681405"
+ "token": "5433315725:AAEIyq5r-Zn-XtQjaWgWeHtrQ8XDHiRQ0mk"
+ "name": "All News"
+
+geo:
+ - "Mexico"
+
+companies:
+ - "Uber"
+ - "Acuerdo"
+ - "DiDi"
+ - "Bolt"
+ - "Lyft"
+ - "Yandex"
+ - "Yango"
+ - "Ligyy"
+
+refs:
+ - "gasoline prices"
+ - "heavy rain"
+ - "public holiday"
+ - 'cartel'
+ - "hurricane"
+ - "Hurricane"
+ - "flood"
+ - "taxi"
+ - "strike"
+ - "Transport"
+ - "marathon"
+ - "shooting"
+
+zero_shots:
+ - 'economics'
+ - 'crime'
+ - 'taxi'
+ - 'disaster'
+ - 'mass murder'
+ - 'holidays'
+ - 'weather'
+ - 'transportation'
+ - 'gas prices'

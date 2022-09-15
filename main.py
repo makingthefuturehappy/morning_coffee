@@ -38,9 +38,11 @@ def main():
     # load channel settings
     channel_mexico = Channel('keys/mexico.yaml')
     channel_SA = Channel('keys/SA.yaml')
+    channel_all_news = Channel('keys/all_news.yaml')
     channels = [
         channel_mexico,
-        channel_SA
+        channel_SA,
+        channel_all_news
     ]
 
     # load all key_words, refs, company_names etc
@@ -172,6 +174,7 @@ def main():
             # news rating
             rating.mexico(source.news, channel)
             rating.SA(source.news, channel)
+            rating.all_news(source.news, channel_all_news)
 
             # display content
             for news in source.news:
