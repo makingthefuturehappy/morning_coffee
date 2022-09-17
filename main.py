@@ -10,6 +10,7 @@ from content_scan import financiero as financiero
 from content_scan import laopinion as laopinion
 from content_scan import buenosaires as bsas
 from content_scan import elheraldo as elheraldo
+from content_scan import clarin_tech as clarin_tech
 
 from channel import Channel
 
@@ -29,7 +30,7 @@ def main():
 
     zero_shot_analysis = False
     tg_post = True
-    emulate = True
+    emulate = False
 
     today = str(date.today().strftime("%Y/%m/%d"))
     # today = "2022/09/09"
@@ -85,6 +86,9 @@ def main():
 
         # load sources
 
+        CLARIN_TECH = clarin_tech.scan(today, db)
+        news_sources.append(CLARIN_TECH)
+
         BSAS = bsas.scan(today, db)
         news_sources.append(BSAS)
 
@@ -125,7 +129,7 @@ def main():
                 if news['status'] == 'translate_from_esp':
                     # print("title esp:", news['title'])
                     news['title'] = translate.translate(news['title'])
-                    # print("title eng:", news['title'], "\n")
+                    print("title eng:", news['title'], "\n")
 
                     traslated_text = translate.translate(news['text'])
                     if traslated_text != "translation error":
