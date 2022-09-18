@@ -52,12 +52,20 @@ class Content():
       return set(links)
 
   def get_content(self, url):
-      html = self.get_html(url)
-      content = bs(html.text, "html.parser")
+      try:
+          html = self.get_html(url)
+          content = bs(html.text, "html.parser")
+      except:
+          print("can't html from:", url)
+          title = ""
+          text = ""
+          return title, text
+
       try:
           title = content.find("h1").text
       except:
           title = "Can't get title by <h1>"
+
       content = content.find_all("p")
       text = ""
       for item in content:
