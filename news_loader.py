@@ -14,9 +14,17 @@ from content_scan import laopinion as laopinion
 from content_scan import buenosaires as bsas
 from content_scan import elheraldo as elheraldo
 from content_scan import clarin_tech as clarin_tech
+from content_scan import laverdad_mexico as laverdad_mexico
+
 
 def news_loader(today, db):
     news_sources = []  # to keep news from all web sources
+
+    try:
+        verdad_mexico = laverdad_mexico.scan(today, db)
+        news_sources.append(verdad_mexico)
+    except:
+        logging.exception("failed to load")
 
     try:
         ELHERALDO = elheraldo.scan(today, db)
