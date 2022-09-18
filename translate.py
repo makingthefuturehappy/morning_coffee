@@ -20,7 +20,7 @@ def translate(text,
                 return text
             except:
                 attempt += 1
-                print("\ndivide text into", attempt+1, "parts")
+                # print("divide text into", attempt+1, "parts")
                 traslated_text = ''
                 parts = split_text(text, attempt+1)
                 for part in parts:
@@ -29,7 +29,7 @@ def translate(text,
                                          from_language=from_language,
                                          to_language=to_language)
                         traslated_text += part
-                        print(attempt+1, "parts: success")
+                        print("    ", attempt+1, "parts: success\n")
                         return traslated_text
                     except:
                         attempt += 1

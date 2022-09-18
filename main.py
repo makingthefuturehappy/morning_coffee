@@ -1,18 +1,6 @@
-from content_scan import economist as economist
-from content_scan import reuters as reuters
-from content_scan import guardian as guardian
-from content_scan import cnn as cnn
-from content_scan import vanguardia as vangurdia
-from content_scan import folha as folha
-from content_scan import cnbc as cnbc
-from content_scan import latimes as latimes
-from content_scan import financiero as financiero
-from content_scan import laopinion as laopinion
-from content_scan import buenosaires as bsas
-from content_scan import elheraldo as elheraldo
-from content_scan import clarin_tech as clarin_tech
-
+from news_loader import news_loader
 from channel import Channel
+import logging
 
 from summarizer import Philschmid_bart_large_cnn_samsum
 # from zero_shot import bart_large_mnli
@@ -73,63 +61,17 @@ def main():
         # zero_shot = bart_large_mnli()
 
         # content parser
-        news_sources = []  # to keep news from all web sources
-
-        # fail
-        # ELHERALDO = elheraldo.scan(today, db)
-        # news_sources.append(ELHERALDO)
-
-        # fail
-        # ECONOMIST = economist.scan(today)
-        # news_sources.append(ECONOMIST)
-    # -----------------------------------------------
-
-        # load sources
-
-        CLARIN_TECH = clarin_tech.scan(today, db)
-        news_sources.append(CLARIN_TECH)
-
-        BSAS = bsas.scan(today, db)
-        news_sources.append(BSAS)
-
-        CNBC = cnbc.scan(today)
-        news_sources.append(CNBC)
-
-        LAOPIMION = laopinion.scan(today)
-        news_sources.append(LAOPIMION)
-
-        CNN = cnn.scan(today)
-        news_sources.append(CNN)
-
-        FOLHA = folha.scan(today, db)
-        news_sources.append(FOLHA)
-
-        GUARDIAN = guardian.scan(today)
-        news_sources.append(GUARDIAN)
-
-        LATIMES = latimes.scan(today)
-        news_sources.append(LATIMES)
-
-        REUTERS = reuters.scan(today)
-        news_sources.append(REUTERS)
-
-        VANGUARDIA = vangurdia.scan(today,db)
-        news_sources.append(VANGUARDIA)
-
-        FINANCIERO = financiero.scan(today)
-        news_sources.append(FINANCIERO)
-
-        print("news load is done\n")
+        news_sources = news_loader(today, db)  # to keep news from all web sources
 
         # translate
         print("translating from spanish to english...")
         for source in news_sources:
-            print("source:", source.source_name)
+            print(source.source_name)
             for news in source.news:
                 if news['status'] == 'translate_from_esp':
                     # print("title esp:", news['title'])
                     news['title'] = translate.translate(news['title'])
-                    print("title eng:", news['title'], "\n")
+                    print("   -", news['title'])
 
                     traslated_text = translate.translate(news['text'])
                     if traslated_text != "translation error":
@@ -139,8 +81,9 @@ def main():
                         news['status'] = 'translation error'
 
         # to process news
+        print("\nSUMMARIZING")
         for source in news_sources:
-            print("source:", source.source_name)
+            print(source.source_name)
 
             for news in source.news:
 
@@ -151,7 +94,7 @@ def main():
                             summary = model.summarize(news['text'])
                         except:
                             print(model.model_name)
-                            print("some error happened\n")
+                            logging.exception("some error happened\n")
                             news[model.model_name] = "fail"
                             news['status'] = 'model failed'
                             continue
