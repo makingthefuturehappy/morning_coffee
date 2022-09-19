@@ -17,7 +17,7 @@ import yaml
 def main():
 
     zero_shot_analysis = False
-    tg_post = True
+    tg_post = False
     emulate = False
 
     today = str(date.today().strftime("%Y/%m/%d"))
@@ -91,7 +91,13 @@ def main():
                 if news['status'] == 'to be sum':
                     for model in models:
                         try:
+                            print(news['title'])
                             summary = model.summarize(news['text'])
+
+                            #delete "dot" at the end for the correct sentence split of the last sentence
+                            if '. ' in summary[len(summary)-2:]:
+                              summary = summary[:-2]
+
                         except:
                             print(model.model_name)
                             logging.exception("some error happened\n")
