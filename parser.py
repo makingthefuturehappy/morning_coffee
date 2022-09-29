@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup as bs
 import requests
+import logging
 
 class Content():
 
@@ -30,16 +31,19 @@ class Content():
           "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Mobile/15E148 Safari/604.1"
           # "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"
       }
-      html = requests.get(url, headers=header)
-      if html.status_code == 200:
-          html.encoding = "utf-8"
-          if save_file:
-              with open("main_page.html", "w") as f:
-                  f.write(html.text)
-          return html
-      else:
-          print("can't get html from", self.url)
-          print("status code:", html.status_code)
+      try:
+          html = requests.get(url, headers=header)
+          if html.status_code == 200:
+              html.encoding = "utf-8"
+              if save_file:
+                  with open("main_page.html", "w") as f:
+                      f.write(html.text)
+              return html
+          else:
+              print("can't get html from", self.url)
+              print("status code:", html.status_code)
+      except:
+          logging.exception("can't get html page:", url)
           return None
 
   def get_links(self, html):

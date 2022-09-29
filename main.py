@@ -1,4 +1,3 @@
-from news_loader import news_loader
 from channel import Channel
 import logging
 
@@ -7,14 +6,16 @@ from summarizer import Philschmid_bart_large_cnn_samsum
 import translate as translate
 
 from joblib import dump, load
-from datetime import date
+from datetime import datetime, date
 from db import DB
 import text_processor
 
 import tg
-import yaml
+
 
 def main():
+
+    start_time = datetime.now()
 
     zero_shot_analysis = False
     tg_post = True
@@ -29,8 +30,8 @@ def main():
     channel_SA = Channel('keys/SA.yaml')
     channel_all_news = Channel('keys/all_news.yaml')
     channels = [
-        channel_mexico,
-        channel_SA,
+        # channel_mexico,
+        # channel_SA,
         channel_all_news
     ]
 
@@ -61,7 +62,33 @@ def main():
         # zero_shot = bart_large_mnli()
 
         # content parser
-        news_sources = news_loader(today, db)  # to keep news from all web sources
+        import news_loader
+        news_sources = news_loader.news_loader(today, db)  # to keep news from all web sources
+
+        # auto loader
+        # import auto_scan as scan
+        # urls = [
+        #     "https://www.forbes.com.mx/",
+        #     "https://www.cnbc.com/",
+        #     "https://www.buenosaires.gob.ar/",
+        #     # "https://www.clarin.com/tecnologia/",
+        #     "https://www.cnbc.com/",
+        #     "https://edition.cnn.com/americas",
+        #     "https://datanoticias.com/",
+        #     "https://www.economist.com/",
+        #     "https://www.elheraldo.co/",
+        #     "https://www.elfinanciero.com.mx",
+        #     "https://www1.folha.uol.com.br/internacional/en/",
+        #     "https://www.theguardian.com/world/americas",
+        #     "https://www.larepublica.co/",
+        #     "https://laopinion.com",
+        #     "https://www.latimes.com/topic/mexico-americas",
+        #     # "https://laverdadnoticias.com/seccion/mexico/",
+        #     "https://www.reuters.com/world/americas/",
+        #     "http://tiempo.com.mx/",
+        #     "https://vanguardia.com.mx/"
+        # ]
+        # news_sources = scan.auto_scan(urls, db)
 
         # translate
         print("translating from spanish to english...")
@@ -234,5 +261,7 @@ def main():
                     #     print("failed to post news:", news['title'])
 
         return news_sources
+
+    print("calc time:", datetime.now() - start_time)
 
 news_sources = main()

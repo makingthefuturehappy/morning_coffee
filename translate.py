@@ -29,7 +29,7 @@ def translate(text,
                                          from_language=from_language,
                                          to_language=to_language)
                         traslated_text += part
-                        print("    ", attempt+1, "parts: success\n")
+                        # print("    ", attempt+1, "parts: success\n")
                         return traslated_text
                     except:
                         attempt += 1
