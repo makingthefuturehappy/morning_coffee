@@ -69,6 +69,7 @@ class Content():
           title = content.find("h1").text
       except:
           title = "Can't get title by <h1>"
+          print(title, url)
 
       content = content.find_all("p")
       text = ""

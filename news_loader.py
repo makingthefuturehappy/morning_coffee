@@ -19,7 +19,6 @@ from content_scan import la_republica as la_republica
 from content_scan import tiempo_com_mx as tiempo_com_mx
 from content_scan import datanoticias as datanoticias
 from content_scan import forbes_mx as forbes_mx
-
 def news_loader(today, db):
     news_sources = []  # to keep news from all web sources
 
@@ -134,3 +133,61 @@ def news_loader(today, db):
     print("news load is done\n")
 
     return news_sources
+
+# auto loader
+def auto_loader(today, db):
+    import parser
+    urls = [
+        "https://www.forbes.com.mx/",
+        "https://www.cnbc.com/",
+        "https://www.buenosaires.gob.ar/",
+        # "https://www.clarin.com/tecnologia/",
+        "https://www.cnbc.com/",
+        "https://edition.cnn.com/americas",
+        "https://datanoticias.com/",
+        "https://www.economist.com/",
+        "https://www.elheraldo.co/",
+        "https://www.elfinanciero.com.mx",
+        "https://www1.folha.uol.com.br/internacional/en/",
+        "https://www.theguardian.com/world/americas",
+        "https://www.larepublica.co/",
+        "https://laopinion.com",
+        "https://www.latimes.com/topic/mexico-americas",
+        # "https://laverdadnoticias.com/seccion/mexico/",
+        "https://www.reuters.com/world/americas/",
+        "http://tiempo.com.mx/",
+        "https://vanguardia.com.mx/"
+    ]
+
+    content = []
+    for url in urls:
+        print(url)
+        news_source = parser.Content(url, # url
+                                     url, # source_name
+                                     "")  # date
+        for link in news_source.links_all:
+            if link is not None:
+                if len(link) > 30:
+                    if "https://" or "http://" in link:
+                        if url in link:
+                            news_source.links_useful.append(link)
+                            print(link)
+                    else:
+                        real_link = url[:-1] + link
+                        news_source.links_useful.append(real_link)
+                        print(real_link)
+
+        news_source.links_useful = db.return_new_links(news_source.links_useful)
+        db.save_new_links(news_source.links_useful)
+        
+        news_source.get_news()
+
+        # set status for translation
+        for news in news_source.news:
+            if news['status'] != 'paywall':
+                news['status'] = 'translate_from_esp'
+
+        print("useful links:", len(news_source.links_useful))
+        content.append(news_source)
+    print("scan is done")
+    return content

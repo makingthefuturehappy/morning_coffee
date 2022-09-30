@@ -1,0 +1,12 @@
+# https://1cloud.ru/blog/yaml_for_beginners
+---
+"FORBES MX":
+ "URL": "https://www.forbes.com.mx/"
+ "language": "esp"
+ "channel": "SA"
+
+"CNBC":
+ "abc": "https://www.cnbc.com/"
+ "language": "eng"
+ "channel": ""
+

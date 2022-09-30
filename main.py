@@ -9,7 +9,6 @@ from joblib import dump, load
 from datetime import datetime, date
 from db import DB
 import text_processor
-
 import tg
 
 
@@ -63,32 +62,8 @@ def main():
 
         # content parser
         import news_loader
-        news_sources = news_loader.news_loader(today, db)  # to keep news from all web sources
-
-        # auto loader
-        # import auto_scan as scan
-        # urls = [
-        #     "https://www.forbes.com.mx/",
-        #     "https://www.cnbc.com/",
-        #     "https://www.buenosaires.gob.ar/",
-        #     # "https://www.clarin.com/tecnologia/",
-        #     "https://www.cnbc.com/",
-        #     "https://edition.cnn.com/americas",
-        #     "https://datanoticias.com/",
-        #     "https://www.economist.com/",
-        #     "https://www.elheraldo.co/",
-        #     "https://www.elfinanciero.com.mx",
-        #     "https://www1.folha.uol.com.br/internacional/en/",
-        #     "https://www.theguardian.com/world/americas",
-        #     "https://www.larepublica.co/",
-        #     "https://laopinion.com",
-        #     "https://www.latimes.com/topic/mexico-americas",
-        #     # "https://laverdadnoticias.com/seccion/mexico/",
-        #     "https://www.reuters.com/world/americas/",
-        #     "http://tiempo.com.mx/",
-        #     "https://vanguardia.com.mx/"
-        # ]
-        # news_sources = scan.auto_scan(urls, db)
+        # news_sources = news_loader.news_loader(today, db)  # to keep news from all web sources
+        news_sources = news_loader.auto_loader(today, db)  # to keep news from all web sources
 
         # translate
         print("translating from spanish to english...")
