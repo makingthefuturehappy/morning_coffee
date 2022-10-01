@@ -1,71 +1,71 @@
 # https://1cloud.ru/blog/yaml_for_beginners
 ---
-- "name": "FORBES MX"
-  "URL": "https://www.forbes.com.mx/"
-  "language": "esp"
-  "channel": "SA"
-
-- "name": "CNBC"
-  "URL": "https://www.cnbc.com/"
-  "language": "eng"
-  "channel": ""
-
-- "name": "Buenos Aires"
-  "URL": "https://www.buenosaires.gob.ar/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "Clarin Tech"
-  "URL": "https://www.clarin.com/tecnologia/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "CNN Americas"
-  "URL": "https://edition.cnn.com/americas"
-  "language": "eng"
-  "channel": ""
+#- "name": "FORBES MX"
+#  "URL": "https://www.forbes.com.mx/"
+#  "language": "esp"
+#  "channel": "SA"
+#
+#- "name": "CNBC"
+#  "URL": "https://www.cnbc.com/"
+#  "language": "eng"
+#  "channel": ""
+#
+#- "name": "Buenos Aires"
+#  "URL": "https://www.buenosaires.gob.ar/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "Clarin Tech"
+#  "URL": "https://www.clarin.com/tecnologia/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "CNN Americas"
+#  "URL": "https://edition.cnn.com/americas"
+#  "language": "eng"
+#  "channel": ""
 
 - "name": "DATANOTICIAS"
   "URL": "https://datanoticias.com/"
   "language": "esp"
   "channel": ""
 
-- "name": "Economist"
-  "URL": "https://www.economist.com/"
-  "language": "eng"
-  "channel": ""
-
-- "name": "El Financiero"
-  "URL": "https://www.elfinanciero.com.mx/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "FOLHA"
-  "URL": "https://www1.folha.uol.com.br/internacional/en/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "the guardian"
-  "URL": "https://www.theguardian.com/world/americas"
-  "language": "eng"
-  "channel": ""
-
-- "name": "la republica"
-  "URL": "https://www.larepublica.co/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "LA TIMES"
-  "URL": "https://www.latimes.com/topic/mexico-americas/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "REUTERS"
-  "URL": "https://www.reuters.com/world/americas/"
-  "language": "eng"
-  "channel": ""
-
-- "name": "VANGARDIA"
-  "URL": "https://vanguardia.com.mx/"
-  "language": "esp"
-  "channel": ""
+#- "name": "Economist"
+#  "URL": "https://www.economist.com/"
+#  "language": "eng"
+#  "channel": ""
+#
+#- "name": "El Financiero"
+#  "URL": "https://www.elfinanciero.com.mx/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "FOLHA"
+#  "URL": "https://www1.folha.uol.com.br/internacional/en/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "the guardian"
+#  "URL": "https://www.theguardian.com/world/americas"
+#  "language": "eng"
+#  "channel": ""
+#
+#- "name": "la republica"
+#  "URL": "https://www.larepublica.co/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "LA TIMES"
+#  "URL": "https://www.latimes.com/topic/mexico-americas/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "REUTERS"
+#  "URL": "https://www.reuters.com/world/americas/"
+#  "language": "eng"
+#  "channel": ""
+#
+#- "name": "VANGARDIA"
+#  "URL": "https://vanguardia.com.mx/"
+#  "language": "esp"
+#  "channel": ""

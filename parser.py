@@ -68,8 +68,12 @@ class Content():
       try:
           title = content.find("h1").text
       except:
-          title = "Can't get title by <h1>"
-          print(title, url)
+          try:
+              title = content.find("h2").text
+          except:
+              title = "Can't get title by <h1> and <h2>"
+              print(title, url)
+              logging.exception("can't get html page:", url)
 
       content = content.find_all("p")
       text = ""
