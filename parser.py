@@ -66,7 +66,7 @@ class Content():
           return title, text
 
       try:
-          title = content.find("h1").text
+          title = content.find_all("h1")[-1].text # [-1] - select all title and choose the last one
       except:
           try:
               title = content.find("h2").text
