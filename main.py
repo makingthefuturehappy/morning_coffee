@@ -63,7 +63,7 @@ def main():
         # content parser
         import news_loader
         # news_sources = news_loader.news_loader(today, db)  # to keep news from all web sources
-        news_sources = news_loader.auto_loader(today, db)  # to keep news from all web sources
+        news_sources = news_loader.auto_loader_v2(today, db)  # to keep news from all web sources
 
         # translate
         print("translating from spanish to english...")

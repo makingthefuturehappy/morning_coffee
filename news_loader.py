@@ -142,7 +142,6 @@ def auto_loader(today, db):
         "https://www.cnbc.com/",
         "https://www.buenosaires.gob.ar/",
         # "https://www.clarin.com/tecnologia/",
-        "https://www.cnbc.com/",
         "https://edition.cnn.com/americas",
         "https://datanoticias.com/",
         "https://www.economist.com/",
@@ -185,6 +184,58 @@ def auto_loader(today, db):
         # set status for translation
         for news in news_source.news:
             if news['status'] != 'paywall':
+                news['status'] = 'translate_from_esp'
+
+        print("useful links:", len(news_source.links_useful))
+        content.append(news_source)
+    print("scan is done")
+    return content
+
+
+def auto_loader_v2(today, db):
+    import parser
+    import yaml
+    import logging
+
+    news_sources = "news_sources.yaml"
+
+    with open(news_sources, 'r') as f:
+        all_sources = list(yaml.safe_load(f))
+
+    content = []
+
+    for source in all_sources:
+        try:
+            url = source['URL']
+            name = source['name']
+            language = source['language']
+            print(name)
+            news_source = parser.Content(url,  # url
+                                         name,  # source_name
+                                         "")  # date
+            for link in news_source.links_all:
+                if link is not None:
+                    if len(link) > 30:
+                        if "https://" or "http://" in link:
+                            if url in link:
+                                news_source.links_useful.append(link)
+                                print(link)
+                        else:
+                            real_link = url[:-1] + link
+                            news_source.links_useful.append(real_link)
+                            print(real_link)
+        except:
+            logging.exception("can't get urls from", source)
+            continue
+
+        news_source.links_useful = db.return_new_links(news_source.links_useful)
+        db.save_new_links(news_source.links_useful)
+
+        news_source.get_news()
+
+        # set status for translation
+        for news in news_source.news:
+            if news['status'] != 'paywall' and language == "esp":
                 news['status'] = 'translate_from_esp'
 
         print("useful links:", len(news_source.links_useful))
