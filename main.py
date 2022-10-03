@@ -71,9 +71,8 @@ def main():
             print(source.source_name)
             for news in source.news:
                 if news['status'] == 'translate_from_esp':
-                    # print("title esp:", news['title'])
                     news['title'] = translate.translate(news['title'])
-                    print("   -", news['title'])
+                    # print("   -", news['title'])
 
                     traslated_text = translate.translate(news['text'])
                     if traslated_text != "translation error":
