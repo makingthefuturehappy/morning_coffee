@@ -14,8 +14,6 @@ import tg
 
 def main():
 
-    start_time = datetime.now()
-
     zero_shot_analysis = False
     tg_post = True
     emulate = False
@@ -66,20 +64,27 @@ def main():
         news_sources = news_loader.auto_loader_v2(today, db)  # to keep news from all web sources
 
         # translate
-        print("translating from spanish to english...")
         for source in news_sources:
             print(source.source_name)
             for news in source.news:
                 if news['status'] == 'translate_from_esp':
                     news['title'] = translate.translate(news['title'])
+                    traslated_text = translate.translate(news['text'])
                     # print("   -", news['title'])
 
-                    traslated_text = translate.translate(news['text'])
-                    if traslated_text != "translation error":
-                        news['text'] = traslated_text
-                        news['status'] = "to be sum"
-                    else:
-                        news['status'] = 'translation error'
+                if news['status'] == 'translate_from_pt':
+                    news['title'] = translate.translate(news['title'],
+                                                        from_language='pt')
+
+                    traslated_text = translate.translate(news['text'],
+                                                        from_language='pt')
+
+
+                if traslated_text != "translation error":
+                    news['text'] = traslated_text
+                    news['status'] = "to be sum"
+                else:
+                    news['status'] = 'translation error'
 
         # to process news
         print("\nSUMMARIZING")
@@ -125,37 +130,24 @@ def main():
         for source in news_sources:
             tags(source.news, channel)
 
-            # news rating
-            rating.mexico(source.news, channel)
-            rating.SA(source.news, channel)
-            rating.all_news(source.news, channel_all_news)
-
             # display content
             for news in source.news:
                 if news['status'] == 'success':
-                    print("\nchannel:", channel.name)
                     print("source:", source.source_name)
                     print(news['title'])
                     text_processor.pretty_print(news['summary'])
                     print("geo:", news['geo'])
                     print("companies:", news['companies'])
                     print("refs:", news['refs'])
-                    print("rating:", news['rating'])
                     print("url:", news['url'])
 
     # select the important
     print("\nTO SEND")
-    for channel in channels:
-        to_send = []
-        for source in news_sources:
-            for news in source.news:
-                if news['status'] == "success":
-                    try:
-                        if news['rating'][channel.chat_id] != 0:
-                            to_send.append(news)
-                    except:
-                        continue
-
+    to_send = []
+    for source in news_sources:
+        for news in source.news:
+            if news['status'] == "success":
+                to_send.append(news)
 
     # dispay the important
     for channel in channels:
@@ -193,26 +185,6 @@ def main():
     #         print("sum failed total:", fails)
 
 
-
-    # Zero-Shot labeling
-    if zero_shot_analysis == True:
-        print("ZERO-SHOT LABELING:")
-        labels = channel_mexico.chat_id['zero_shots']
-
-        for source in news_sources:
-            for news in source.news:
-                try:
-                    print("\nsource:", source.source_name)
-                    print(news['title'])
-                    text_processor.pretty_print(news['summary'])
-                    print(news['tags'])
-                    news['zero_shot'] = zero_shot.zero_shot(news['text'], labels)
-                    for shot in news['zero_shot']:
-                        print(shot)
-                    print("-----------------------------------\n")
-                except:
-                    continue
-
     # TG post
     if tg_post == True:
 
@@ -221,21 +193,19 @@ def main():
             creds = {"chat_id": channel.chat_id,
                      "token": channel.token}
             for news in to_send:
-                if channel.chat_id in list(news['rating'].keys()):
-                    # try:
-                    tg_post = tg.format_for_tg(
-                        news['url'],
-                        news['source'],
-                        news['title'],
-                        news['summary'],
-                        news['tags'][channel.chat_id]
-                    )
-                    tg.send_msg(creds, tg_post)
-                    # except:
-                    #     print("failed to post news:", news['title'])
+                tg_post = tg.format_for_tg(
+                    news['url'],
+                    news['source'],
+                    news['title'],
+                    news['summary'],
+                    news['tags'][channel.chat_id]
+                )
+                tg.send_msg(creds, tg_post)
+
 
         return news_sources
 
-    print("calc time:", datetime.now() - start_time)
 
+start_time = datetime.now()
 news_sources = main()
+print("calc time:", datetime.now() - start_time)

@@ -1,5 +1,5 @@
 # https://1cloud.ru/blog/yaml_for_beginners
----
+#---
 - "name": "FORBES MX"
   "URL": "https://www.forbes.com.mx/"
   "language": "esp"
@@ -74,7 +74,7 @@
   "URL": "https://elperiodico.com.gt/"
   "language": "esp"
   "channel": ""
-
+#
 - "name": "traficozm"
   "URL": "https://traficozmg.com/"
   "language": "esp"
@@ -93,4 +93,10 @@
 - "name": "Clobal Times China"
   "URL": "https://www.globaltimes.cn/source/economy/"
   "language": "eng"
+  "channel": ""
+
+# BRAZIL
+- "name": "O DIA Brazil"
+  "URL": "https://odia.ig.com.br"
+  "language": "pt"
   "channel": ""

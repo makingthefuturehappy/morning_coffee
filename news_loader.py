@@ -223,7 +223,7 @@ def auto_loader_v2(today, db):
                         else:
                             real_link = url[:-1] + link
                             news_source.links_useful.append(real_link)
-                            print(real_link)
+                            # print(real_link)
         except:
             logging.exception("can't get urls from", source)
             continue
@@ -237,6 +237,10 @@ def auto_loader_v2(today, db):
         for news in news_source.news:
             if news['status'] != 'paywall' and language == "esp":
                 news['status'] = 'translate_from_esp'
+
+            if news['status'] != 'paywall' and language == "pt":
+                news['status'] = 'translate_from_pt'
+
 
         print("useful links:", len(news_source.links_useful))
         content.append(news_source)
