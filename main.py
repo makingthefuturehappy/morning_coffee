@@ -1,22 +1,18 @@
 from channel import Channel
 import logging
 
-from summarizer import Philschmid_bart_large_cnn_samsum
-# from zero_shot import bart_large_mnli
-import translate as translate
-
 from joblib import dump, load
 from datetime import datetime, date
 from db import DB
 import text_processor
 import tg
 
-
 def main():
 
     zero_shot_analysis = False
-    tg_post = True
-    emulate = False
+    tg_post = False
+    emulate = True
+    statistics = True
 
     today = str(date.today().strftime("%Y/%m/%d"))
     # today = "2022/09/09"
@@ -46,6 +42,9 @@ def main():
             refs.append(ref)
 
     if emulate == False:
+        from summarizer import Philschmid_bart_large_cnn_samsum
+        # from zero_shot import bart_large_mnli
+        import translate as translate
 
         # load NN models
         models = [
@@ -203,7 +202,11 @@ def main():
                 tg.send_msg(creds, tg_post)
 
 
-        return news_sources
+    if statistics == True:
+        import statistics
+        statistics.summary(news_sources)
+
+    return news_sources
 
 
 start_time = datetime.now()
