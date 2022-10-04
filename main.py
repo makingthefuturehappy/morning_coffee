@@ -10,7 +10,7 @@ import tg
 def main():
 
     zero_shot_analysis = False
-    tg_post = False
+    tg_post = True
     emulate = True
     statistics = True
 
@@ -200,6 +200,7 @@ def main():
                     news['tags'][channel.chat_id]
                 )
                 tg.send_msg(creds, tg_post)
+                news['status'] = "sent"
 
 
     if statistics == True:

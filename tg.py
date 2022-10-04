@@ -1,17 +1,6 @@
 import re
 import requests
 
-def translate(text, src='en', dest='ru'):
-  from googletrans import Translator
-
-  translator = Translator()
-  result = translator.translate('hello', src='en', dest='ru')
-
-  translator = Translator()
-  text = str(translator.translate(text, src=src, dest=dest).text) + "\n"
-  return text
-
-
 def format_for_tg(url, source_name, title, text, hashtags=[]):
   url = url.replace("https://", "")
   formatted_text = "\n" + "<b>" + "<a href =" + "'" + url + "'" + ">" + source_name + ":</a> " + title + "</b>"+"\n\n"

@@ -7,6 +7,7 @@ def summary(news_sources):
     all_translated = 0
     all_translation_error = 0
     all_summarization_error = 0
+    all_sent = 0
 
     for source in news_sources:
         total_news = len(source.news)
@@ -15,6 +16,7 @@ def summary(news_sources):
         translation_error = 0
         summarization_error = 0
         success = 0
+        sent = 0
 
         for news in source.news:
             if news['status'] == "to be sum":
@@ -29,10 +31,15 @@ def summary(news_sources):
             if news['status'] == 'model failed':
                 summarization_error += 1
                 all_summarization_error += 1
+            if news['status'] == 'sent':
+                sent += 1
+                all_sent += 1
+
 
         print("\nsource:            ", source.source_name)
         print("total news:          ", total_news)
         print(" success:            ", success)
+        print(" sent:               ", sent)
         if translated != 0:
             print(" translated:         ", translated)
         if translation_error != 0:
@@ -45,3 +52,4 @@ def summary(news_sources):
     print("all_translated:", all_translated)
     print("all_translation_error:", all_translation_error)
     print("all_summarization_error:", all_summarization_error)
+    print("all_sent:", all_sent)
