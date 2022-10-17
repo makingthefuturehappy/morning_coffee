@@ -1,3 +1,5 @@
+import time
+
 from channel import Channel
 import logging
 
@@ -10,9 +12,11 @@ import tg
 def main():
 
     zero_shot_analysis = False
+    to_sum = False
     tg_post = True
-    emulate = True
+    emulate = False
     statistics = True
+
 
     today = str(date.today().strftime("%Y/%m/%d"))
     # today = "2022/09/09"
@@ -81,11 +85,46 @@ def main():
 
                 if traslated_text != "translation error":
                     news['text'] = traslated_text
-                    news['status'] = "to be sum"
+                    news['status'] = "translated"
                 else:
                     news['status'] = 'translation error'
 
-        # to process news
+        # select news by key words
+        from tags import tags
+        for channel in channels:
+            for source in news_sources:
+                tags(source.news, channel)
+
+                # display content
+                for news in source.news:
+                    if news['status'] == 'success':
+                        print("source:", source.source_name)
+                        print(news['title'])
+                        text_processor.pretty_print(news['summary'])
+                        print("geo:", news['geo'])
+                        print("companies:", news['companies'])
+                        print("refs:", news['refs'])
+                        print("url:", news['url'])
+
+        # to_save
+        dump(news_sources, 'news_sources.joblib')
+
+    if emulate == True:
+        news_sources = load('news_sources.joblib')
+
+
+    # select the important
+    print("\nSELECTING BY KEY WORDS...")
+    to_send = []
+    for source in news_sources:
+        for news in source.news:
+            all_tags = news['companies'] + news['refs']
+            if len(all_tags) > 0:
+                news['status'] == "to be sum"
+                to_send.append(news)
+
+    # to process news
+    if to_sum:
         print("\nSUMMARIZING")
         for source in news_sources:
             print(source.source_name)
@@ -99,9 +138,9 @@ def main():
                             print("   -", news['title'])
                             summary = model.summarize(news['text'])
 
-                            #delete "dot" at the end for the correct sentence split of the last sentence
-                            if '. ' in summary[len(summary)-2:]:
-                              summary = summary[:-2]
+                            # delete "dot" at the end for the correct sentence split of the last sentence
+                            if '. ' in summary[len(summary) - 2:]:
+                                summary = summary[:-2]
 
                         except:
                             print(model.model_name)
@@ -115,38 +154,6 @@ def main():
                         news['status'] = 'success'
                         news[model.model_name] = "success"
 
-        # to_save
-        dump(news_sources, 'news_sources.joblib')
-
-    if emulate == True:
-        news_sources = load('news_sources.joblib')
-
-    # Tagging
-    from tags import tags
-    import news_ratings as rating
-
-    for channel in channels:
-        for source in news_sources:
-            tags(source.news, channel)
-
-            # display content
-            for news in source.news:
-                if news['status'] == 'success':
-                    print("source:", source.source_name)
-                    print(news['title'])
-                    text_processor.pretty_print(news['summary'])
-                    print("geo:", news['geo'])
-                    print("companies:", news['companies'])
-                    print("refs:", news['refs'])
-                    print("url:", news['url'])
-
-    # select the important
-    print("\nTO SEND")
-    to_send = []
-    for source in news_sources:
-        for news in source.news:
-            if news['status'] == "success":
-                to_send.append(news)
 
     # dispay the important
     for channel in channels:
@@ -199,6 +206,8 @@ def main():
                     news['summary'],
                     news['tags'][channel.chat_id]
                 )
+
+                time.sleep(2)
                 tg.send_msg(creds, tg_post)
                 news['status'] = "sent"
 

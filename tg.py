@@ -1,4 +1,3 @@
-import re
 import requests
 
 def format_for_tg(url, source_name, title, text, hashtags=[]):
@@ -21,10 +20,11 @@ def format_for_tg(url, source_name, title, text, hashtags=[]):
 
 def send_msg(creds,  # chat, bot credentials
              text):
-  url_req = "https://api.telegram.org/bot" + creds['token'] + \
+
+    url_req = "https://api.telegram.org/bot" + creds['token'] + \
             "/sendMessage" + "?chat_id=" + creds['chat_id'] + \
             "&text=" + text + \
             "&parse_mode=HTML" + \
             "&disable_web_page_preview=True"
-  requests.get(url_req)
-  return
+    requests.get(url_req)
+    return

@@ -2,7 +2,7 @@
 
 def tags(all_news, channel):
     for news in all_news:
-        if news['status'] == "success":
+        if news['status'] == "translated":
 
             for geo in channel.geos:
                 if geo in news['text']:

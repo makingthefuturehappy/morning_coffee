@@ -1,39 +1,39 @@
 # https://1cloud.ru/blog/yaml_for_beginners
 #---
-- "name": "FORBES MX"
-  "URL": "https://www.forbes.com.mx/"
-  "language": "esp"
-  "channel": "SA"
-
-- "name": "CNBC"
-  "URL": "https://www.cnbc.com/"
-  "language": "eng"
-  "channel": ""
-
-- "name": "Buenos Aires"
-  "URL": "https://www.buenosaires.gob.ar/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "Clarin Tech"
-  "URL": "https://www.clarin.com/tecnologia/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "CNN Americas"
-  "URL": "https://edition.cnn.com/americas"
-  "language": "eng"
-  "channel": ""
-
-- "name": "DATANOTICIAS"
-  "URL": "https://datanoticias.com/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "Economist"
-  "URL": "https://www.economist.com/"
-  "language": "eng"
-  "channel": ""
+#- "name": "FORBES MX"
+#  "URL": "https://www.forbes.com.mx/"
+#  "language": "esp"
+#  "channel": "SA"
+#
+#- "name": "CNBC"
+#  "URL": "https://www.cnbc.com/"
+#  "language": "eng"
+#  "channel": ""
+#
+#- "name": "Buenos Aires"
+#  "URL": "https://www.buenosaires.gob.ar/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "Clarin Tech"
+#  "URL": "https://www.clarin.com/tecnologia/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "CNN Americas"
+#  "URL": "https://edition.cnn.com/americas"
+#  "language": "eng"
+#  "channel": ""
+#
+#- "name": "DATANOTICIAS"
+#  "URL": "https://datanoticias.com/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "Economist"
+#  "URL": "https://www.economist.com/"
+#  "language": "eng"
+#  "channel": ""
 
 - "name": "El Financiero"
   "URL": "https://www.elfinanciero.com.mx/"
@@ -74,7 +74,7 @@
   "URL": "https://elperiodico.com.gt/"
   "language": "esp"
   "channel": ""
-#
+
 - "name": "traficozm"
   "URL": "https://traficozmg.com/"
   "language": "esp"
