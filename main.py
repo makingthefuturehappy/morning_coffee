@@ -14,8 +14,9 @@ def main():
     zero_shot_analysis = False
     to_sum = False
     tg_post = True
+    sum_models = False
     emulate = False
-    statistics = True
+    statistics = False
 
 
     today = str(date.today().strftime("%Y/%m/%d"))
@@ -46,20 +47,22 @@ def main():
             refs.append(ref)
 
     if emulate == False:
-        from summarizer import Philschmid_bart_large_cnn_samsum
-        # from zero_shot import bart_large_mnli
         import translate as translate
 
-        # load NN models
-        models = [
-            # Pegasus(),
-            # Facebook_bart_large_cnn(),
-            Philschmid_bart_large_cnn_samsum(),
-            # MT5_multilingual_XLSum(),
-            # Small2bert_cnn_daily_mail(),
-        ]
+        if sum_models == True:
+            from summarizer import Philschmid_bart_large_cnn_samsum
+            # from zero_shot import bart_large_mnli
 
-        # zero_shot = bart_large_mnli()
+            # load NN models
+            models = [
+                # Pegasus(),
+                # Facebook_bart_large_cnn(),
+                Philschmid_bart_large_cnn_samsum(),
+                # MT5_multilingual_XLSum(),
+                # Small2bert_cnn_daily_mail(),
+            ]
+
+            # zero_shot = bart_large_mnli()
 
         # content parser
         import news_loader
@@ -90,6 +93,7 @@ def main():
                     news['status'] = 'translation error'
 
         # select news by key words
+        print("\nTAGGING...")
         from tags import tags
         for channel in channels:
             for source in news_sources:
@@ -151,21 +155,19 @@ def main():
 
                         summary = text_processor.clean_text(summary)
                         news['summary'] = summary
-                        news['status'] = 'success'
+                        news['status'] = 'summed'
                         news[model.model_name] = "success"
 
 
     # dispay the important
-    for channel in channels:
-        print("\nchannel:", channel.name)
-        for news in to_send:
-            print(news['title'])
-            text_processor.pretty_print(news['summary'])
-            print("geo:", news['geo'])
-            print("companies:", news['companies'])
-            print("refs:", news['refs'])
-            print("rating:", news['rating'])
-            print("url:", news['url'])
+    for news in to_send:
+        print(news['title'])
+        text_processor.pretty_print(news['summary'])
+        print("geo:", news['geo'])
+        print("companies:", news['companies'])
+        print("refs:", news['refs'])
+        print("rating:", news['rating'])
+        print("url:", news['url'])
 
     # print statistics
     # print("summarization result:")

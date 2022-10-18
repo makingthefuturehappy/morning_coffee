@@ -35,50 +35,61 @@
 #  "language": "eng"
 #  "channel": ""
 
-- "name": "El Financiero"
-  "URL": "https://www.elfinanciero.com.mx/"
-  "language": "esp"
-  "channel": ""
+#- "name": "El Financiero"
+#  "URL": "https://www.elfinanciero.com.mx/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "FOLHA"
+#  "URL": "https://www1.folha.uol.com.br/internacional/en/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "the guardian"
+#  "URL": "https://www.theguardian.com/world/americas"
+#  "language": "eng"
+#  "channel": ""
+#
+#- "name": "la republica"
+#  "URL": "https://www.larepublica.co/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "LA TIMES"
+#  "URL": "https://www.latimes.com/topic/mexico-americas/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "REUTERS"
+#  "URL": "https://www.reuters.com/world/americas/"
+#  "language": "eng"
+#  "channel": ""
+#
+#- "name": "VANGARDIA"
+#  "URL": "https://vanguardia.com.mx/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "El periodico Guatemala"
+#  "URL": "https://elperiodico.com.gt/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "traficozm"
+#  "URL": "https://traficozmg.com/"
+#  "language": "esp"
+#  "channel": ""
+#
+#- "name": "Clobal Times China"
+#  "URL": "https://www.globaltimes.cn/source/economy/"
+#  "language": "eng"
+#  "channel": ""
 
-- "name": "FOLHA"
-  "URL": "https://www1.folha.uol.com.br/internacional/en/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "the guardian"
-  "URL": "https://www.theguardian.com/world/americas"
-  "language": "eng"
-  "channel": ""
-
-- "name": "la republica"
-  "URL": "https://www.larepublica.co/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "LA TIMES"
-  "URL": "https://www.latimes.com/topic/mexico-americas/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "REUTERS"
-  "URL": "https://www.reuters.com/world/americas/"
-  "language": "eng"
-  "channel": ""
-
-- "name": "VANGARDIA"
-  "URL": "https://vanguardia.com.mx/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "El periodico Guatemala"
-  "URL": "https://elperiodico.com.gt/"
-  "language": "esp"
-  "channel": ""
-
-- "name": "traficozm"
-  "URL": "https://traficozmg.com/"
-  "language": "esp"
-  "channel": ""
+## BRAZIL
+#- "name": "O DIAhummer Brazil"
+#  "URL": "https://odia.ig.com.br"
+#  "language": "pt"
+#  "channel": ""
 
 - "name": "Tribuna de la Bahia"
   "URL": "https://tribunadelabahia.com.mx/"
@@ -89,14 +100,3 @@
   "URL": "https://listindiario.com/"
   "language": "esp"
   "channel": ""
-
-- "name": "Clobal Times China"
-  "URL": "https://www.globaltimes.cn/source/economy/"
-  "language": "eng"
-  "channel": ""
-
-## BRAZIL
-#- "name": "O DIAhummer Brazil"
-#  "URL": "https://odia.ig.com.br"
-#  "language": "pt"
-#  "channel": ""
