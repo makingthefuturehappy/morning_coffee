@@ -14,10 +14,10 @@ def translate(text,
 
         while attempt <= attempts:
             try:
-                text = ts.google(text,
+                traslated_text = ts.google(text,
                                  from_language=from_language,
                                  to_language=to_language)
-                return text
+                break
             except:
                 attempt += 1
                 # print("divide text into", attempt+1, "parts")
@@ -30,7 +30,6 @@ def translate(text,
                                          to_language=to_language)
                         traslated_text += part
                         # print("    ", attempt+1, "parts: success\n")
-                        return traslated_text
                     except:
                         attempt += 1
                         if attempt == attempts:
@@ -38,9 +37,14 @@ def translate(text,
                         break
 
     else:
-        print("translation modul error")
+        print("translation modul error. Set", translator)
         text = "translation error"
         return text
+
+    if traslated_text != None:
+        return traslated_text
+    else:
+        return "translation error"
 
 
 def split_text(text, parts=2):

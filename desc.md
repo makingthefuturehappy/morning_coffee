@@ -1,5 +1,10 @@
 
 **News sources:**<br>
 
-Forbes MX
-CNBC
+<h3>news_loader</h3>
+
+status:
+ - None
+ - downloaded
+
+<h3>news_loader</h3>

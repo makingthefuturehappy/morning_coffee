@@ -4,10 +4,11 @@ import logging
 
 class Content():
 
-  def __init__(self, url, source_name, date,
-                min_text_size=500  # if the text is less than this size, it will be skipped
+  def __init__(self, url, source_name, date, language,
+                min_text_size=400,  # if the text is less than this size, it will be skipped
                 ):
       self.url = url
+      self.language = language
       self.source_name = source_name
       self.date = date
       self.links_all = []
@@ -61,9 +62,14 @@ class Content():
           content = bs(html.text, "html.parser")
       except:
           print("can't html from:", url)
-          title = ""
-          text = ""
+          title = None
+          text = None
           return title, text
+
+      text_source = content.find_all("p")
+      text = ""
+      for item in text_source:
+          text += item.text
 
       try:
           title = content.find_all("h1")[-1].text # [-1] - select all title and choose the last one
@@ -71,38 +77,38 @@ class Content():
           try:
               title = content.find("h2").text
           except:
-              title = "Can't get title by <h1> and <h2>"
+              title = "No Title"
               print(title, url)
-              logging.exception("can't get html page:", url)
+              logging.exception("Can't get title:", url)
 
-      content = content.find_all("p")
-      text = ""
-      for item in content:
-          text += item.text
       return title, text
 
   def get_news(self):
       for link in self.links_useful:
 
           title, text = self.get_content(link)
+
           news = {"date": self.date,
                   "url": link,
                   "text": text,
                   "source": self.source_name,
+                  "language": self.language,
                   "title": title,
                   "status": None,
                   "geo": [],
                   "companies": [],
                   "refs": [],
-                  "rating": {} # "chat_id": "index priority"
                   }
 
           # paywall check
-          if len(text) < self.min_text_size:
-              self.links_skipped_qnnty += 1
-              news['status'] = "paywall"
+          if text != None:
+              if len(text) < self.min_text_size:
+                  self.links_skipped_qnnty += 1
+                  news['status'] = None
+              else:
+                  news['status'] = "downloaded"
           else:
-              news['status'] = "to be sum"
+              news['status'] = None
 
           self.news.append(news)
 

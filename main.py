@@ -11,13 +11,17 @@ import tg
 
 def main():
 
-    zero_shot_analysis = False
-    to_sum = False
-    tg_post = True
-    sum_models = False
-    emulate = False
-    statistics = False
+    news_download_translate = False
 
+    if news_download_translate == True:
+        emulate = False
+    else:
+        emulate = True
+
+    save_to_db = False
+    to_sum = True #summarize
+    tg_post = False
+    statistics = False
 
     today = str(date.today().strftime("%Y/%m/%d"))
     # today = "2022/09/09"
@@ -37,130 +41,107 @@ def main():
     geos = []
     companies = []
     refs = []
+    tags = []
 
     for channel in channels:
         for geo in channel.geos:
-            geos.append(geo)
+            tags.append(geo)
         for company in channel.companies:
-            geos.append(company)
-        for ref in channel.companies:
-            refs.append(ref)
+            tags.append(company)
+        for ref in channel.refs:
+            tags.append(ref)
 
-    if emulate == False:
-        import translate as translate
-
-        if sum_models == True:
-            from summarizer import Philschmid_bart_large_cnn_samsum
-            # from zero_shot import bart_large_mnli
-
-            # load NN models
-            models = [
-                # Pegasus(),
-                # Facebook_bart_large_cnn(),
-                Philschmid_bart_large_cnn_samsum(),
-                # MT5_multilingual_XLSum(),
-                # Small2bert_cnn_daily_mail(),
-            ]
-
-            # zero_shot = bart_large_mnli()
-
-        # content parser
+    # content parser
+    if news_download_translate:
         import news_loader
-        # news_sources = news_loader.news_loader(today, db)  # to keep news from all web sources
-        news_sources = news_loader.auto_loader_v2(today, db)  # to keep news from all web sources
+        print("NEWS DOWNLOADING...")
+        news_sources = news_loader.news_loader(today, db, save_to_db)  # to keep news from all web sources
+        print("NEWS DOWNLOADING done")
 
         # translate
+        print("\nNEWS TRANSLATING...")
+        import translate as translate
+
         for source in news_sources:
-            print(source.source_name)
+            print(" -", source.source_name)
             for news in source.news:
-                if news['status'] == 'translate_from_esp':
-                    news['title'] = translate.translate(news['title'])
-                    traslated_text = translate.translate(news['text'])
-                    # print("   -", news['title'])
-
-                if news['status'] == 'translate_from_pt':
-                    news['title'] = translate.translate(news['title'],
-                                                        from_language='pt')
-
-                    traslated_text = translate.translate(news['text'],
-                                                        from_language='pt')
-
+                if news['status'] == "downloaded":
+                    if news['title'] != None:
+                        news['title'] = translate.translate(news['title'], from_language=news['language'])
+                        print(news['title'])
+                    traslated_text = translate.translate(news['text'], from_language=news['language'])
+                    news['text'] = traslated_text
 
                 if traslated_text != "translation error":
-                    news['text'] = traslated_text
                     news['status'] = "translated"
                 else:
                     news['status'] = 'translation error'
-
-        # select news by key words
-        print("\nTAGGING...")
-        from tags import tags
-        for channel in channels:
-            for source in news_sources:
-                tags(source.news, channel)
-
-                # display content
-                for news in source.news:
-                    if news['status'] == 'success':
-                        print("source:", source.source_name)
-                        print(news['title'])
-                        text_processor.pretty_print(news['summary'])
-                        print("geo:", news['geo'])
-                        print("companies:", news['companies'])
-                        print("refs:", news['refs'])
-                        print("url:", news['url'])
+        print("\nTRANSLATING done")
 
         # to_save
         dump(news_sources, 'news_sources.joblib')
+        print("NEWS DUMP done")
 
     if emulate == True:
         news_sources = load('news_sources.joblib')
 
+    # select news by key words
+    print("\nTAGGING...")
+    news_to_sum = []
 
-    # select the important
-    print("\nSELECTING BY KEY WORDS...")
-    to_send = []
-    for source in news_sources:
-        for news in source.news:
-            all_tags = news['companies'] + news['refs']
-            if len(all_tags) > 0:
-                news['status'] == "to be sum"
-                to_send.append(news)
+    import tagging
 
-    # to process news
-    if to_sum:
-        print("\nSUMMARIZING")
+    for channel in channels:
         for source in news_sources:
-            print(source.source_name)
-
             for news in source.news:
+                news = tagging.tags_v2(tags, news)
 
-                # summarize
-                if news['status'] == 'to be sum':
-                    for model in models:
-                        try:
-                            print("   -", news['title'])
-                            summary = model.summarize(news['text'])
+                if news['status'] == "tagged":
+                    print('\n', news['title'])
+                    news_to_sum.append(news)
 
-                            # delete "dot" at the end for the correct sentence split of the last sentence
-                            if '. ' in summary[len(summary) - 2:]:
-                                summary = summary[:-2]
+    # to sum news
+    print("\nSUMMARIZING")
 
-                        except:
-                            print(model.model_name)
-                            logging.exception("some error happened\n")
-                            news[model.model_name] = "fail"
-                            news['status'] = 'model failed'
-                            continue
+    if to_sum == True:
+        from summarizer import Philschmid_bart_large_cnn_samsum
+        # from zero_shot import bart_large_mnli
 
-                        summary = text_processor.clean_text(summary)
-                        news['summary'] = summary
-                        news['status'] = 'summed'
-                        news[model.model_name] = "success"
+        # load NN models
+        models = [
+            # Pegasus(),
+            # Facebook_bart_large_cnn(),
+            Philschmid_bart_large_cnn_samsum(),
+            # MT5_multilingual_XLSum(),
+            # Small2bert_cnn_daily_mail(),
+        ]
+
+        for news in news_to_sum:
+            print(news['source'])
+            for model in models:
+                try:
+                    print("   -", news['title'])
+                    summary = model.summarize(news['text'])
+
+                    # delete "dot" at the end for the correct sentence split of the last sentence
+                    if '. ' in summary[len(summary) - 2:]:
+                        summary = summary[:-2]
+
+                except:
+                    print(model.model_name)
+                    logging.exception("some error happened\n")
+                    news[model.model_name] = "fail"
+                    news['status'] = 'model failed'
+                    continue
+
+                summary = text_processor.clean_text(summary)
+                news['summary'] = summary
+                news['status'] = 'summed'
+                news[model.model_name] = "success"
 
 
     # dispay the important
-    for news in to_send:
+    for news in news_to_sum:
         print(news['title'])
         text_processor.pretty_print(news['summary'])
         print("geo:", news['geo'])
@@ -200,7 +181,7 @@ def main():
             print("\nsent to channel:", channel.name)
             creds = {"chat_id": channel.chat_id,
                      "token": channel.token}
-            for news in to_send:
+            for news in news_to_sum:
                 tg_post = tg.format_for_tg(
                     news['url'],
                     news['source'],

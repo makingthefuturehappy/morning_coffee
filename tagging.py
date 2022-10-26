@@ -5,6 +5,10 @@ def tags(all_news, channel):
         if news['status'] == "translated":
 
             for geo in channel.geos:
+                # print("\n", news['source'])
+                # print(news['status'])
+                # print(news['text'])
+                # print(channel.geos)
                 if geo in news['text']:
                     news['geo'].append(geo)
             news['geo'] = list(set(news['geo']))
@@ -28,5 +32,21 @@ def tags(all_news, channel):
             except:
                 news_tags = {channel.chat_id: tags}
             news.update({"tags": news_tags})
+
+    return
+
+def tags_v2(tags:list, news):
+    all_tags = []
+    for tag in tags:
+        if tag in news['text']:
+            all_tags.append(tag)
+    news['tags'] = set(all_tags)
+    if len(news['tags']) != 0:
+        news['status'] = "tagged"
+    return news
+
+
+
+
 
     return

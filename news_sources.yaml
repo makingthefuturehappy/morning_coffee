@@ -2,101 +2,101 @@
 #---
 #- "name": "FORBES MX"
 #  "URL": "https://www.forbes.com.mx/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": "SA"
 #
 #- "name": "CNBC"
 #  "URL": "https://www.cnbc.com/"
-#  "language": "eng"
+#  "language": "en"
 #  "channel": ""
 #
 #- "name": "Buenos Aires"
 #  "URL": "https://www.buenosaires.gob.ar/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": ""
 #
 #- "name": "Clarin Tech"
 #  "URL": "https://www.clarin.com/tecnologia/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": ""
 #
 #- "name": "CNN Americas"
 #  "URL": "https://edition.cnn.com/americas"
-#  "language": "eng"
+#  "language": "en"
 #  "channel": ""
 #
 #- "name": "DATANOTICIAS"
 #  "URL": "https://datanoticias.com/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": ""
 #
 #- "name": "Economist"
 #  "URL": "https://www.economist.com/"
-#  "language": "eng"
+#  "language": "en"
 #  "channel": ""
-
+#
 #- "name": "El Financiero"
 #  "URL": "https://www.elfinanciero.com.mx/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": ""
 #
 #- "name": "FOLHA"
 #  "URL": "https://www1.folha.uol.com.br/internacional/en/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": ""
 #
 #- "name": "the guardian"
 #  "URL": "https://www.theguardian.com/world/americas"
-#  "language": "eng"
+#  "language": "en"
 #  "channel": ""
 #
 #- "name": "la republica"
 #  "URL": "https://www.larepublica.co/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": ""
 #
 #- "name": "LA TIMES"
 #  "URL": "https://www.latimes.com/topic/mexico-americas/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": ""
 #
 #- "name": "REUTERS"
 #  "URL": "https://www.reuters.com/world/americas/"
-#  "language": "eng"
+#  "language": "en"
 #  "channel": ""
 #
 #- "name": "VANGARDIA"
 #  "URL": "https://vanguardia.com.mx/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": ""
 #
 #- "name": "El periodico Guatemala"
 #  "URL": "https://elperiodico.com.gt/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": ""
 #
 #- "name": "traficozm"
 #  "URL": "https://traficozmg.com/"
-#  "language": "esp"
+#  "language": "es"
 #  "channel": ""
 #
 #- "name": "Clobal Times China"
 #  "URL": "https://www.globaltimes.cn/source/economy/"
-#  "language": "eng"
-#  "channel": ""
-
-## BRAZIL
-#- "name": "O DIAhummer Brazil"
-#  "URL": "https://odia.ig.com.br"
-#  "language": "pt"
+#  "language": "en"
 #  "channel": ""
 
 - "name": "Tribuna de la Bahia"
   "URL": "https://tribunadelabahia.com.mx/"
-  "language": "esp"
+  "language": "es"
   "channel": ""
 
 - "name": "Listin diario"
   "URL": "https://listindiario.com/"
-  "language": "esp"
+  "language": "es"
   "channel": ""
+
+## BRAZIL
+#- "name": "O DIA Brazil"
+#  "URL": "https://odia.ig.com.br"
+#  "language": "pt"
+#  "channel": ""
