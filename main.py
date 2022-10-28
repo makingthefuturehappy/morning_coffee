@@ -11,16 +11,16 @@ import tg
 
 def main():
 
-    news_download_translate = False
+    news_download_translate = True
 
     if news_download_translate == True:
         emulate = False
     else:
         emulate = True
 
-    save_to_db = False
+    save_to_db = True
     to_sum = True #summarize
-    tg_post = False
+    tg_post = True
     statistics = False
 
     today = str(date.today().strftime("%Y/%m/%d"))
@@ -44,8 +44,6 @@ def main():
     tags = []
 
     for channel in channels:
-        for geo in channel.geos:
-            tags.append(geo)
         for company in channel.companies:
             tags.append(company)
         for ref in channel.refs:
@@ -72,18 +70,13 @@ def main():
                     traslated_text = translate.translate(news['text'], from_language=news['language'])
                     news['text'] = traslated_text
 
-                if traslated_text != "translation error":
-                    news['status'] = "translated"
-                else:
-                    news['status'] = 'translation error'
+                    if traslated_text != "translation error":
+                        news['status'] = "translated"
+                    else:
+                        news['status'] = 'translation error'
         print("\nTRANSLATING done")
 
-        # to_save
-        dump(news_sources, 'news_sources.joblib')
-        print("NEWS DUMP done")
 
-    if emulate == True:
-        news_sources = load('news_sources.joblib')
 
     # select news by key words
     print("\nTAGGING...")
@@ -120,7 +113,7 @@ def main():
             print(news['source'])
             for model in models:
                 try:
-                    print("   -", news['title'])
+                    print(news['source'], ":", news['title'])
                     summary = model.summarize(news['text'])
 
                     # delete "dot" at the end for the correct sentence split of the last sentence
@@ -139,15 +132,19 @@ def main():
                 news['status'] = 'summed'
                 news[model.model_name] = "success"
 
+        # to_save
+        dump(news_sources, 'news_sources.joblib')
+        print("NEWS DUMP done")
+
+    if emulate == True:
+        news_sources = load('news_sources.joblib')
+
 
     # dispay the important
     for news in news_to_sum:
         print(news['title'])
         text_processor.pretty_print(news['summary'])
-        print("geo:", news['geo'])
-        print("companies:", news['companies'])
-        print("refs:", news['refs'])
-        print("rating:", news['rating'])
+        print("tags:", news['tags'])
         print("url:", news['url'])
 
     # print statistics
@@ -187,7 +184,7 @@ def main():
                     news['source'],
                     news['title'],
                     news['summary'],
-                    news['tags'][channel.chat_id]
+                    news['tags']
                 )
 
                 time.sleep(2)

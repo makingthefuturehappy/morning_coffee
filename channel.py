@@ -6,7 +6,6 @@ class Channel():
             keys = yaml.safe_load(f)
 
         self.name = keys['tg_keys']['name']
-        self.geos = keys['geo']
         self.companies = keys['companies']
         self.refs = keys['refs']
         self.chat_id = keys['tg_keys']['chat_id']

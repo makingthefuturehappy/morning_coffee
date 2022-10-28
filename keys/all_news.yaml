@@ -5,9 +5,6 @@ tg_keys:
  "token": "5433315725:AAEIyq5r-Zn-XtQjaWgWeHtrQ8XDHiRQ0mk"
  "name": "All News"
 
-geo:
- - "Mexico"
-
 companies:
  - "Uber"
  - "Acuerdo"
@@ -30,10 +27,10 @@ refs:
  - "strike"
  - "Transport"
  - "marathon"
- - "shooting"
  - "digital platfrorm"
  - "lockdown"
  - "non-working"
+ - "ride hailing"
 
 zero_shots:
  - 'economics'

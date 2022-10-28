@@ -37,6 +37,10 @@ def tags(all_news, channel):
 
 def tags_v2(tags:list, news):
     all_tags = []
+
+    if news['text'] == None:
+        return news
+
     for tag in tags:
         if tag in news['text']:
             all_tags.append(tag)
@@ -44,9 +48,3 @@ def tags_v2(tags:list, news):
     if len(news['tags']) != 0:
         news['status'] = "tagged"
     return news
-
-
-
-
-
-    return
