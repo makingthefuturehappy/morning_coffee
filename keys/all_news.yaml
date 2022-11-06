@@ -13,7 +13,12 @@ companies:
  - "Lyft"
  - "Yandex"
  - "Yango"
- - "Ligee"
+ - "Liggy"
+ - "Linkee"
+ - "Lynkee"
+ - "JAKU"
+ - "Jaku"
+ - "Picala"
 
 refs:
  - "gasoline prices"
@@ -24,7 +29,6 @@ refs:
  - "Hurricane"
  - "flood"
  - "taxi"
- - "strike"
  - "Transport"
  - "marathon"
  - "digital platfrorm"
