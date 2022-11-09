@@ -375,6 +375,11 @@
   "language": "es"
   "channel": ""
 
+- "name": "Prensa Libre Guatemala"
+  "URL": "https://www.prensalibre.com/"
+  "language": "es"
+  "channel": ""
+
 # BRAZIL
 - "name": "O DIA Brazil"
   "URL": "https://odia.ig.com.br/"
